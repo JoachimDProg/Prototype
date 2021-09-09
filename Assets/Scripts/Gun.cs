@@ -10,19 +10,17 @@ public abstract class Gun : MonoBehaviour
     [SerializeField] protected int magazineCapacity;
     protected AudioSource audioSource;
 
-    [Header("Observation Variable")]
+    [Header("Gun Parameter")]
     protected float gunCooldownTimer = 0.0f;
     protected Queue<Projectile> projectileMagazine;
     protected bool CanShoot => gunCooldownTimer <= 0;
 
-    // Start is called before the first frame update
     void Start()
     {
         audioSource = GetComponent<AudioSource>();
         FillMagazine();
     }
 
-    // Update is called once per frame
     void Update()
     {
         UpdateShootCooldown();

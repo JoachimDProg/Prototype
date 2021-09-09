@@ -13,12 +13,6 @@ public abstract class Projectile : MonoBehaviour
     protected Vector2 velocity;
     private Action<Projectile> returnToPool;
 
-    private void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
     void Update()
     {
         Move();
@@ -31,7 +25,6 @@ public abstract class Projectile : MonoBehaviour
 
     protected virtual void Move()
     {
-        // move projectile using transform
         transform.position += new Vector3(velocity.x, velocity.y) * Time.deltaTime;
 
         if (ScreenBoundaries.Instance.DistanceFromBounds(transform.position) > 1f)

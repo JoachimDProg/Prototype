@@ -17,19 +17,31 @@ public abstract class Enemy : MonoBehaviour
     [SerializeField] protected bool inverted;
     protected Vector2 parentUp;
 
-
+    [Header("Bound Parameters")]
+    [SerializeField] protected float padding;
+    [SerializeField] protected Vector2 spriteSize;
+    protected bool hasEnteredScreen = false;
+    // protected bool HasEnteredScreen => ScreenBoundaries.Instance.screenBounds.Contains(transform.position);
 
     // Start is called before the first frame update
     void Start()
     {
         gun = GetComponentInChildren<Gun>();
+        spriteSize = GetComponent<SpriteRenderer>().bounds.size;
     }
 
     // Update is called once per frame
     void Update()
     {
         MoveSine();
+        if (ScreenBoundaries.Instance.screenBounds.Contains(transform.position))
+            hasEnteredScreen = true;
         //Shoot();
+    }
+
+    private bool HasEnteredScreen(Vector2 position)
+    {
+        return ScreenBoundaries.Instance.screenBounds.Contains(position);
     }
 
     private void MoveSine()
@@ -44,7 +56,7 @@ public abstract class Enemy : MonoBehaviour
 
         transform.position += new Vector3(posX, -posY);
 
-        if (ScreenBoundaries.Instance.DistanceFromBounds(transform.position) > 10f)
+        if (ScreenBoundaries.Instance.DistanceFromBounds(transform.position) > spriteSize.y && hasEnteredScreen)
         {
             returnToBase.Invoke(this);
         }
@@ -70,6 +82,4 @@ public abstract class Enemy : MonoBehaviour
 
         this.returnToBase = returnToBase;
     }
-
-    
 }

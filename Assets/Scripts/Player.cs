@@ -8,14 +8,14 @@ public class Player : MonoBehaviour
     [SerializeField] private float playerMoveSpeedNormal = 20.0f;
     [SerializeField] private float playerMoveSpeedSlow = 12.0f;
     [SerializeField] private Gun[] guns;
+    private Vector2 playerSpriteSize;
 
-    // Start is called before the first frame update
     void Start()
     {
         guns = GetComponentsInChildren<Gun>();
+        playerSpriteSize = GetComponent<SpriteRenderer>().bounds.extents;
     }
 
-    // Update is called once per frame
     void Update()
     {
         Move();
@@ -30,7 +30,7 @@ public class Player : MonoBehaviour
         Vector3 input = new Vector2(xInput, yInput);
 
         // new position equals old position + input
-        transform.position = ScreenBoundaries.Instance.ClampPosition(transform.position + input);
+        transform.position = ScreenBoundaries.Instance.ClampPlayerPosition(transform.position + input, playerSpriteSize);
     }
 
     private void Shoot()
