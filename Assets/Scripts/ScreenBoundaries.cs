@@ -37,9 +37,9 @@ public class ScreenBoundaries : MonoBehaviour
         return new Vector2(xLimit, yLimit);
     }
 
-    public bool IsOutOfBounds(Vector3 position)
+    public bool IsInsideBounds(Vector3 position)
     {
-        return !screenBounds.Contains(position);
+        return screenBounds.Contains(position);
     }
 
     public float DistanceFromBounds(Vector3 position)

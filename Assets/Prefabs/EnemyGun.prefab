@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2cd80ee0d5a42134595419554d21246e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  projectilePrefab: {fileID: 1586302492572805013, guid: f6bb1f7f5fa11fa4682cca7b74ffe25a, type: 3}
+  projectilePrefab: {fileID: 1586302492572805013, guid: d03261bd2df206d4caafa53a52814e98, type: 3}
   gunShootRate: 1
   magazineCapacity: 3
 --- !u!82 &-6234020113043832743

@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1824814748}
   - component: {fileID: 7963681217035956876}
   - component: {fileID: 1686311631296694287}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Enemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -151,8 +151,9 @@ MonoBehaviour:
   frequency: 1
   offset: 0
   inverted: 0
-  padding: 0
+  sine: 1
   spriteSize: {x: 0, y: 0}
+  hasEnteredScreen: 0
 --- !u!1001 &7164096987873796926
 PrefabInstance:
   m_ObjectHideFlags: 0

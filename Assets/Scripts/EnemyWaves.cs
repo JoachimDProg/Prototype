@@ -4,23 +4,49 @@ using UnityEngine;
 
 public class EnemyWaves : MonoBehaviour
 {
+    [Header("Wave Movement Parameters")]
+    [SerializeField] private float moveSpeed; 
+    private Vector2 velocity;
+
+    [Header("Wave Configuration")]
     [SerializeField] private Queue<Enemy> enemyBase;
     [SerializeField] private Enemy enemyPrefab;
     [SerializeField] private int population;
     [SerializeField] private float dequeueTimer;
+    private bool canEmpty = false;
     private float sendTroopsTimer;
 
-    // Start is called before the first frame update
+    [Header("Wave Movement Configuration")]
+    [SerializeField] protected float waveSpeed;
+
+    [SerializeField] protected bool sine;
+    [SerializeField] protected bool inverted;
+    [SerializeField] protected float amplitude;
+    [SerializeField] protected float frequency;
+    [SerializeField] protected float offset;
+    
     void Start()
     {
         sendTroopsTimer = dequeueTimer;
         FillBase();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        EmptyBase();
+        Move();
+        EmptyBase(canEmpty);
+    }
+
+    private void Move()
+    {
+        velocity = transform.up * moveSpeed;
+        transform.position += new Vector3(velocity.x, velocity.y) * Time.deltaTime;
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        moveSpeed = 0;
+        canEmpty = true;
     }
 
     private void FillBase()
@@ -35,20 +61,25 @@ public class EnemyWaves : MonoBehaviour
         }
     }
 
-    private void EmptyBase()
+    private void EmptyBase(bool canStart)
     {
-        sendTroopsTimer -= Time.deltaTime;
-
-        if (sendTroopsTimer <= 0)
+        if (canStart)
         {
-            Enemy enemy = enemyBase.Dequeue();
-            enemy.InitParameters(transform.position, transform.up, ReturnToBase);
-            enemy.gameObject.SetActive(true);
-            sendTroopsTimer = dequeueTimer;
-        }
+            sendTroopsTimer -= Time.deltaTime;
 
-        if (enemyBase.Count == 0)
-            gameObject.SetActive(false);
+            if (sendTroopsTimer <= 0)
+            {
+                Enemy enemy = enemyBase.Dequeue();
+                enemy.InitParameters(transform.position, transform.up, waveSpeed, ReturnToBase);
+                if (sine)
+                    enemy.InitSine(sine, inverted, amplitude, frequency, offset);
+                enemy.gameObject.SetActive(true);
+                sendTroopsTimer = dequeueTimer;
+            }
+
+            if (enemyBase.Count == 0)
+                gameObject.SetActive(false);
+        }
     }
 
     protected void ReturnToBase(Enemy enemy)
