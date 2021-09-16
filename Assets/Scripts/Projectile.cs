@@ -8,10 +8,19 @@ public abstract class Projectile : MonoBehaviour
     [Header("Projectile Configuration")]
     [SerializeField] protected float projectileSpeed;
     [SerializeField] protected int projectileDamage;
-
-    // variables passed from parent
     protected Vector2 velocity;
+
+    [Header("Screen Bound Parameters")]
+    protected Vector2 spriteSize;
+    protected ScreenBoundaries bounds;
+
     private Action<Projectile> returnToPool;
+
+    private void Start()
+    {
+        bounds = ScreenBoundaries.Instance;
+        spriteSize = GetComponent<SpriteRenderer>().bounds.extents;
+    }
 
     void Update()
     {
@@ -27,7 +36,7 @@ public abstract class Projectile : MonoBehaviour
     {
         transform.position += new Vector3(velocity.x, velocity.y) * Time.deltaTime;
 
-        if (ScreenBoundaries.Instance.DistanceFromBounds(transform.position) > 1f)
+        if (bounds.DistanceFromBounds(transform.position) > spriteSize.y)
         {
             returnToPool.Invoke(this);
         }

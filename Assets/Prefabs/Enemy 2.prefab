@@ -146,13 +146,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shootPermissionTimer: 1
-  gun: {fileID: 1542284820959399902, guid: 95660143ffbb1584388828c99ee13baf, type: 3}
   hasEnteredBounds: 0
   isInsideBounds: 0
   player: {fileID: 0}
-  rotationSpeed: 200
-  shootAngle: 5
-  seekCooldown: 2
+  rotationSpeed: 20
+  minRotation: 0.5
+  shootAngle: 3
+  seekCooldown: 1
 --- !u!1001 &7164096987873796926
 PrefabInstance:
   m_ObjectHideFlags: 0

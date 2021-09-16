@@ -5,10 +5,12 @@ using UnityEngine;
 public class Enemy2 : Enemy
 {
     [SerializeField] private float rotationSpeed;
-    [SerializeField] private float shootAngle;
+    [SerializeField] [Range(0.0f, 1.0f)] private float minRotation;
+    [SerializeField] [Range(1, 10)] private int shootAngle;
     [SerializeField] private float seekCooldown;
     private float canSeekTimer;
     private bool canSeek = true;
+    
 
     protected override void Start()
     {
@@ -23,18 +25,23 @@ public class Enemy2 : Enemy
             Vector3 currentPos = transform.position;
             Vector3 playerPos = player.transform.position;
 
+            // calculate angle to target in RAD
             float angleToTarget = Math.GetAngle(transform.up, Math.GetVector(currentPos, playerPos));
+            // calculate angle to rotate this frame in RAD
             float angleToRotate = angleToTarget * Time.deltaTime * rotationSpeed;
-            float lookAngle = angleToTarget * Mathf.Rad2Deg;
-            float rotateSign = Mathf.Sign(angleToTarget);
 
-            Debug.Log("Angle to rotate: " + angleToRotate);
+            // check if rotation is positive or negative
+            float rotateSign = Mathf.Sign(angleToTarget);
+            // calculate angle to rotate this frame in DEG
+            float lookAngle = angleToTarget * Mathf.Rad2Deg * rotateSign;
+
             Debug.Log("Look Angle: " + lookAngle);
 
-            if (angleToRotate >= -1 && angleToRotate < 0)
-                angleToRotate = -1f;
-            else if (angleToRotate > 0 && angleToRotate <= 1)
-                angleToRotate = 1f;
+            // if rotation for this frame is too small, increase rotation
+            if (angleToRotate >= -minRotation && angleToRotate < 0)
+                angleToRotate = -minRotation;
+            else if (angleToRotate > 0 && angleToRotate <= minRotation)
+                angleToRotate = minRotation;
 
             Vector3 eulerAngles = new Vector3(0, 0, angleToRotate);
 

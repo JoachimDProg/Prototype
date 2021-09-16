@@ -5,8 +5,8 @@ using UnityEngine;
 public class EnemyWaves : MonoBehaviour
 {
     [Header("Wave Movement Parameters")]
-    [SerializeField] private float moveSpeed; 
-    private Vector2 velocity; // mettre dans move?
+    [SerializeField] private float moveSpeed;
+
 
     [Header("Wave Configuration")]
     [SerializeField] private Queue<Enemy> enemyBase;
@@ -24,7 +24,7 @@ public class EnemyWaves : MonoBehaviour
     [SerializeField] protected float amplitude;
     [SerializeField] protected float frequency;
     [SerializeField] protected float offset;
-    
+
     void Start()
     {
         sendTroopsTimer = dequeueTimer;
@@ -39,6 +39,7 @@ public class EnemyWaves : MonoBehaviour
 
     private void Move()
     {
+        Vector2 velocity;
         velocity = transform.up * moveSpeed;
         transform.position += new Vector3(velocity.x, velocity.y) * Time.deltaTime;
     }

@@ -5,16 +5,20 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     [Header("Player Configuration")]
-    private float playerMoveSpeed;
     [SerializeField] private float playerMoveSpeedNormal;
     [SerializeField] private float playerMoveSpeedSlow;
-    [SerializeField] private Gun[] guns;
-    private Vector2 playerSpriteSize;
+    private float playerMoveSpeed;
+    private Gun[] guns;
+    
+    [Header("Screen Bound Parameters")]
+    private Vector2 spriteSize;
+    protected ScreenBoundaries bounds;
 
     void Start()
     {
         guns = GetComponentsInChildren<Gun>();
-        playerSpriteSize = GetComponent<SpriteRenderer>().bounds.extents;
+        spriteSize = GetComponent<SpriteRenderer>().bounds.extents;
+        bounds = ScreenBoundaries.Instance;
     }
 
     void Update()
@@ -34,7 +38,7 @@ public class Player : MonoBehaviour
         float yInput = Input.GetAxis("Vertical") * playerMoveSpeed * Time.deltaTime;
         Vector3 input = new Vector2(xInput, yInput);
 
-        transform.position = ScreenBoundaries.Instance.ClampPlayerPosition(transform.position + input, playerSpriteSize);
+        transform.position = bounds.ClampPlayerPosition(transform.position + input, spriteSize);
     }
 
     private void Shoot()
