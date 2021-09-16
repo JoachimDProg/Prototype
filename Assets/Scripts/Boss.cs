@@ -11,10 +11,10 @@ public class Boss : MonoBehaviour
     [SerializeField] AnimationCurve animationCurve;
 
     [Header("Enemy Configuration")]
-    [SerializeField] private float movementRate = 5.0f;
-    [SerializeField] private float movementSpeed = 5.0f;
-    [SerializeField] private float movementTime = 3.0f;
-    [SerializeField] private float shootRange = 1;
+    [SerializeField] private float movementRate;
+    [SerializeField] private float movementSpeed;
+    [SerializeField] private float movementTime;
+    [SerializeField] private float shootRange;
 
     [Header("Observation Variable")]
     private Gun gun;

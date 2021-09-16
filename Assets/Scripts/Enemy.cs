@@ -6,9 +6,12 @@ using UnityEngine;
 public abstract class Enemy : MonoBehaviour
 {
     [Header("Enemy Configuration")]
-    protected float movementSpeed;
-    [SerializeField] protected Gun gun;
+    [SerializeField] protected float shootPermissionTimer;
+    protected Gun gun;
     private Action<Enemy> returnToBase;
+    protected float movementSpeed;
+    protected float canShootTimer;
+    protected bool canShoot = false; // for delaying shoot when entering bounds
 
     [Header("Sine Configuration")]
     protected bool sine;
@@ -19,25 +22,32 @@ public abstract class Enemy : MonoBehaviour
     protected float sin = 0;
 
     [Header("Screen Bound Parameters")]
-    [SerializeField] protected Vector2 spriteSize;
+    [SerializeField] protected bool hasEnteredBounds = false;
+    [SerializeField] protected bool isInsideBounds;
     protected ScreenBoundaries bounds;
-    [SerializeField] protected bool hasEnteredScreen = false;
+    protected Vector2 spriteSize;
+
+    [Header("Object References")]
+    [SerializeField] protected GameObject player;
 
     // Start is called before the first frame update
-    void Start()
+     protected virtual void Start()
     {
         gun = GetComponentInChildren<Gun>();
         spriteSize = GetComponent<SpriteRenderer>().bounds.size;
         bounds = ScreenBoundaries.Instance;
+        player = GameObject.FindGameObjectWithTag("Player");
+        canShootTimer = shootPermissionTimer;
     }
 
     // Update is called once per frame
     void Update()
     {
         Move();
-        if (bounds.IsInsideBounds(transform.position))
-            hasEnteredScreen = true;
-        //Shoot();
+        HasEnteredBounds(transform.position);
+        IsInsideBounds(transform.position);
+        UpdateShootPermissionTimer();
+        Shoot();
     }
 
     private void Move()
@@ -52,7 +62,7 @@ public abstract class Enemy : MonoBehaviour
 
         transform.position += new Vector3(posX, -posY);
 
-        if (hasEnteredScreen && bounds.DistanceFromBounds(transform.position) > spriteSize.y)
+        if (hasEnteredBounds && bounds.DistanceFromBounds(transform.position) > spriteSize.y)
             returnToBase.Invoke(this);
     }
 
@@ -71,9 +81,34 @@ public abstract class Enemy : MonoBehaviour
         returnToBase.Invoke(this);
     }
 
-    private void Shoot()
+    protected abstract void Shoot();
+
+    protected void UpdateShootPermissionTimer()
     {
-        gun.Shoot();
+        if (!canShoot)
+        {
+            canShootTimer -= Time.deltaTime;
+
+            if (canShootTimer <= 0)
+            {
+                canShootTimer = shootPermissionTimer;
+                canShoot = true;
+            }
+        }
+    }
+
+    protected void HasEnteredBounds(Vector3 position)
+    {
+        if (bounds.IsInsideBounds(position))
+            hasEnteredBounds = true;
+    }
+
+    protected void IsInsideBounds(Vector3 position)
+    {
+        if (bounds.IsInsideBounds(position))
+            isInsideBounds = true;
+        else
+            isInsideBounds = false;
     }
 
     public void InitParameters(Vector2 position, Vector2 direction, float speed, Action<Enemy> returnToBase)

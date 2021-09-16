@@ -6,8 +6,8 @@ public abstract class Gun : MonoBehaviour
 {
     [Header("Gun Configuration")]
     [SerializeField] protected Projectile projectilePrefab;
-    [SerializeField] protected float gunShootRate;
     [SerializeField] protected int magazineCapacity;
+    [SerializeField] protected float gunShootRate;
     protected AudioSource audioSource;
 
     [Header("Gun Parameter")]

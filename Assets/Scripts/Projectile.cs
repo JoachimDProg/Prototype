@@ -7,7 +7,7 @@ public abstract class Projectile : MonoBehaviour
 {
     [Header("Projectile Configuration")]
     [SerializeField] protected float projectileSpeed;
-    [SerializeField] protected float projectileDamage;
+    [SerializeField] protected int projectileDamage;
 
     // variables passed from parent
     protected Vector2 velocity;

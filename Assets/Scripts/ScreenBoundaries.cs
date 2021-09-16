@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class ScreenBoundaries : MonoBehaviour
 {
+    public static ScreenBoundaries Instance;
+    public Bounds screenBounds;
+    
     [Header("Stage Limit")]
     private float xMin;
     private float xMax;
     private float yMin;
     private float yMax;
     
-    public Bounds screenBounds;
-    public static ScreenBoundaries Instance;
-
     void Start()
     {
         Instance = this;
