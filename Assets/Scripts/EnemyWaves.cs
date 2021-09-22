@@ -7,7 +7,6 @@ public class EnemyWaves : MonoBehaviour
     [Header("Wave Movement Parameters")]
     [SerializeField] private float moveSpeed;
 
-
     [Header("Wave Configuration")]
     [SerializeField] private Queue<Enemy> enemyBase;
     [SerializeField] private Enemy enemyPrefab;

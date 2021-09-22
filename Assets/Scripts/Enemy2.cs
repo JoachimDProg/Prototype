@@ -38,10 +38,13 @@ public class Enemy2 : Enemy
             Debug.Log("Look Angle: " + lookAngle);
 
             // if rotation for this frame is too small, increase rotation
-            if (angleToRotate >= -minRotation && angleToRotate < 0)
+            /*if (angleToRotate >= -minRotation && angleToRotate < 0)
                 angleToRotate = -minRotation;
             else if (angleToRotate > 0 && angleToRotate <= minRotation)
-                angleToRotate = minRotation;
+                angleToRotate = minRotation;*/
+
+            if (Mathf.Abs(angleToRotate) < minRotation)
+                angleToRotate = minRotation * rotateSign;
 
             Vector3 eulerAngles = new Vector3(0, 0, angleToRotate);
 

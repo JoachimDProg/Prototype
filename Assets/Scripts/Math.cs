@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Math
+public static class Math
 {
     //** VECTOR **//
 
@@ -27,6 +27,12 @@ public class Math
 
     // Return Vector between objects
     static public Vector3 GetVector(Vector3 point1, Vector3 point2)
+    {
+        Vector3 vectorBetweenPoints = new Vector3(point2.x - point1.x, point2.y - point1.y, point2.z - point1.z);
+        return vectorBetweenPoints;
+    }
+
+    static public Vector3 GetVectorExt(this Vector3 point1, Vector3 point2)
     {
         Vector3 vectorBetweenPoints = new Vector3(point2.x - point1.x, point2.y - point1.y, point2.z - point1.z);
         return vectorBetweenPoints;

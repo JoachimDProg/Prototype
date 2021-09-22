@@ -14,7 +14,7 @@ public abstract class Enemy : MonoBehaviour
     protected bool canShoot = false; // for delaying shoot when entering bounds
 
     [Header("Sine Configuration")]
-    protected bool sine;
+    protected bool isSine;
     protected bool inverted;
     protected float amplitude;
     protected float frequency;
@@ -36,7 +36,7 @@ public abstract class Enemy : MonoBehaviour
         gun = GetComponentInChildren<Gun>();
         spriteSize = GetComponent<SpriteRenderer>().bounds.size;
         bounds = ScreenBoundaries.Instance;
-        player = GameObject.FindGameObjectWithTag("Player");
+        player = GameObject.FindGameObjectWithTag("Player"); // change to playerManager
         canShootTimer = shootPermissionTimer;
     }
 
@@ -54,7 +54,7 @@ public abstract class Enemy : MonoBehaviour
     {
         Vector3 position = transform.position;
 
-        if (sine)
+        if (isSine)
             sin = Sine(position);
 
         float posX = movementSpeed * Time.deltaTime * sin;
@@ -102,13 +102,10 @@ public abstract class Enemy : MonoBehaviour
         if (bounds.IsInsideBounds(position))
             hasEnteredBounds = true;
     }
-
+    // updateinsidebounds + fusion des deux
     protected void IsInsideBounds(Vector3 position)
     {
-        if (bounds.IsInsideBounds(position))
-            isInsideBounds = true;
-        else
-            isInsideBounds = false;
+        isInsideBounds = bounds.IsInsideBounds(position);
     }
 
     public void InitParameters(Vector2 position, Vector2 direction, float speed, Action<Enemy> returnToBase)
@@ -121,9 +118,9 @@ public abstract class Enemy : MonoBehaviour
         this.returnToBase = returnToBase;
     }
 
-    public void InitSine(bool sine, bool inverted, float amplitude, float frequency, float offset)
+    public void InitSine(bool isSine, bool inverted, float amplitude, float frequency, float offset)
     {
-        this.sine = sine;
+        this.isSine = isSine;
         this.inverted = inverted;
         this.amplitude = amplitude;
         this.frequency = frequency;

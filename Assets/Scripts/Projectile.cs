@@ -30,6 +30,9 @@ public abstract class Projectile : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         returnToPool.Invoke(this);
+
+        /*if (collision.CompareTag("Player"))*/
+            // bla bla
     }
 
     protected virtual void Move()

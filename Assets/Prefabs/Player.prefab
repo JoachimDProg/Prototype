@@ -100,7 +100,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerMoveSpeedNormal: 20
   playerMoveSpeedSlow: 12
-  guns: []
 --- !u!1001 &3448736090252426345
 PrefabInstance:
   m_ObjectHideFlags: 0
