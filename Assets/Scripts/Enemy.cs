@@ -44,8 +44,7 @@ public abstract class Enemy : MonoBehaviour
     void Update()
     {
         Move();
-        HasEnteredBounds(transform.position);
-        IsInsideBounds(transform.position);
+        UpdateBoundStatus(transform.position);
         UpdateShootPermissionTimer();
         Shoot();
     }
@@ -97,14 +96,11 @@ public abstract class Enemy : MonoBehaviour
         }
     }
 
-    protected void HasEnteredBounds(Vector3 position)
+    protected void UpdateBoundStatus(Vector3 position)
     {
         if (bounds.IsInsideBounds(position))
             hasEnteredBounds = true;
-    }
-    // updateinsidebounds + fusion des deux
-    protected void IsInsideBounds(Vector3 position)
-    {
+
         isInsideBounds = bounds.IsInsideBounds(position);
     }
 
