@@ -7,23 +7,21 @@ public abstract class Enemy : MonoBehaviour
 {
     [Header("Enemy Configuration")]
     [SerializeField] protected float shootPermissionTimer;
-    protected Gun gun;
     private Action<Enemy> returnToBase;
-    protected float movementSpeed;
-    protected float canShootTimer;
+    protected IMovement enemyMovement;
+    protected Gun gun;
+    protected float movementSpeed = 0f;
+    protected float canShootTimer = 0f;
     protected bool canShoot = false; // for delaying shoot when entering bounds
 
     [Header("Sine Configuration")]
-    protected bool isSine;
-    protected bool inverted;
-    protected float amplitude;
-    protected float frequency;
-    protected float offset;
-    protected float sin = 0;
+    protected Dictionary<string, float> sineParam;
+    protected bool isSine = false;
+    protected float sin = 0f;
 
     [Header("Screen Bound Parameters")]
     [SerializeField] protected bool hasEnteredBounds = false;
-    [SerializeField] protected bool isInsideBounds;
+    [SerializeField] protected bool isInsideBounds = false;
     protected ScreenBoundaries bounds;
     protected Vector2 spriteSize;
 
@@ -31,13 +29,19 @@ public abstract class Enemy : MonoBehaviour
     [SerializeField] protected GameObject player;
 
     // Start is called before the first frame update
-     protected virtual void Start()
+    protected virtual void Start()
     {
         gun = GetComponentInChildren<Gun>();
         spriteSize = GetComponent<SpriteRenderer>().bounds.size;
         bounds = ScreenBoundaries.Instance;
         player = GameObject.FindGameObjectWithTag("Player"); // change to playerManager
         canShootTimer = shootPermissionTimer;
+
+        if (isSine)
+        {
+            SineMove sineMove = enemyMovement as SineMove;
+            sineMove.sineParam = sineParam;
+        }
     }
 
     // Update is called once per frame
@@ -47,37 +51,23 @@ public abstract class Enemy : MonoBehaviour
         UpdateBoundStatus(transform.position);
         UpdateShootPermissionTimer();
         Shoot();
-    }
-
-    private void Move()
-    {
-        Vector3 position = transform.position;
-
-        if (isSine)
-            sin = Sine(position);
-
-        float posX = movementSpeed * Time.deltaTime * sin;
-        float posY = movementSpeed * Time.deltaTime;
-
-        transform.position += new Vector3(posX, -posY);
-
-        if (hasEnteredBounds && bounds.DistanceFromBounds(transform.position) > spriteSize.y)
-            returnToBase.Invoke(this);
-    }
-
-    private float Sine(Vector3 position)
-    {
-        float sin = Mathf.Sin(position.y * frequency + (offset * Mathf.PI)) * amplitude;
-
-        if (inverted)
-            sin *= -1;
-
-        return sin;
+        CanReturnToBase();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         returnToBase.Invoke(this);
+    }
+
+    private void CanReturnToBase()
+    {
+        if (hasEnteredBounds && bounds.DistanceFromBounds(transform.position) > spriteSize.y)
+            returnToBase.Invoke(this);
+    }
+
+    public virtual void Move()
+    {
+        transform.position += enemyMovement.Move(transform.position, transform.up, movementSpeed);
     }
 
     protected abstract void Shoot();
@@ -114,12 +104,10 @@ public abstract class Enemy : MonoBehaviour
         this.returnToBase = returnToBase;
     }
 
-    public void InitSine(bool isSine, bool inverted, float amplitude, float frequency, float offset)
+    public void InitMove(IMovement enemyMovement, bool isSine, Dictionary<string, float> sineParam)
     {
+        this.enemyMovement = enemyMovement;
         this.isSine = isSine;
-        this.inverted = inverted;
-        this.amplitude = amplitude;
-        this.frequency = frequency;
-        this.offset = offset;
+        this.sineParam = sineParam;
     }
 }

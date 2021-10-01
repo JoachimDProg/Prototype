@@ -5,35 +5,41 @@ using UnityEngine;
 public class EnemyWaves : MonoBehaviour
 {
     [Header("Wave Movement Parameters")]
-    [SerializeField] private float moveSpeed;
+    [SerializeField] private float moveSpeed = 0f;
 
     [Header("Wave Configuration")]
     [SerializeField] private Queue<Enemy> enemyBase;
     [SerializeField] private Enemy enemyPrefab;
-    [SerializeField] private int population;
-    [SerializeField] private float dequeueTimer;
-    private bool canEmpty = false;
-    private float sendTroopsTimer;
+    [SerializeField] private int population = 0;
+    [SerializeField] private float dequeueTimer = 0f;
+    private float canEmptyDistance = 5f;
+    private bool canEmptyPool = false;
+    private float sendTroopsTimer = 0f;
 
     [Header("Wave Movement Configuration")]
-    [SerializeField] protected float waveSpeed;
+    private IMovement waveMovement;
+    [SerializeField] private float waveSpeed = 0f;
 
-    [SerializeField] protected bool sine;
-    [SerializeField] protected bool inverted;
-    [SerializeField] protected float amplitude;
-    [SerializeField] protected float frequency;
-    [SerializeField] protected float offset;
+    private Dictionary<string, float> sineParam;
+    [SerializeField] private bool isSine = false;
+    [SerializeField] private bool isInverted = false;
+    [SerializeField] private float amplitude = 0f;
+    [SerializeField] private float frequency = 0f;
+    [SerializeField] private float offset = 0f;
 
     void Start()
     {
         sendTroopsTimer = dequeueTimer;
         FillBase();
+        InitSineParam();
+        WaveMoveInit(isSine);
     }
 
     void Update()
     {
         Move();
-        EmptyBase(canEmpty);
+        HasArrivedToBounds(transform.position);
+        EmptyBase(canEmptyPool);
     }
 
     private void Move()
@@ -43,10 +49,13 @@ public class EnemyWaves : MonoBehaviour
         transform.position += new Vector3(velocity.x, velocity.y) * Time.deltaTime;
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void HasArrivedToBounds(Vector3 position)
     {
-        moveSpeed = 0;
-        canEmpty = true;
+        if (ScreenBoundaries.Instance.DistanceFromBounds(position) < canEmptyDistance)
+        {
+            moveSpeed = 0;
+            canEmptyPool = true;
+        }
     }
 
     private void FillBase()
@@ -71,8 +80,7 @@ public class EnemyWaves : MonoBehaviour
             {
                 Enemy enemy = enemyBase.Dequeue();
                 enemy.InitParameters(transform.position, transform.up, waveSpeed, ReturnToBase);
-                if (sine)
-                    enemy.InitSine(sine, inverted, amplitude, frequency, offset);
+                enemy.InitMove(WaveMoveInit(isSine), isSine, sineParam);
                 enemy.gameObject.SetActive(true);
                 sendTroopsTimer = dequeueTimer;
             }
@@ -82,7 +90,27 @@ public class EnemyWaves : MonoBehaviour
         }
     }
 
-    protected void ReturnToBase(Enemy enemy)
+    private IMovement WaveMoveInit(bool sine)
+    {
+        if (sine)
+            return new SineMove();
+        else
+            return new NormalMove();
+    }
+
+    private void InitSineParam()
+    {
+        sineParam = new Dictionary<string, float>();
+        int inverted = 1;
+
+        sineParam.Add("frequency", frequency);
+        sineParam.Add("amplitude", amplitude);
+        sineParam.Add("offset", offset);
+        if (isInverted) inverted = -1;
+        sineParam.Add("inverted", inverted);
+    }
+
+    private void ReturnToBase(Enemy enemy)
     {
         enemyBase.Enqueue(enemy);
         enemy.gameObject.SetActive(false);
