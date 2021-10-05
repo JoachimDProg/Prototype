@@ -17,7 +17,7 @@ public class Enemy1 : Enemy
     public override void Move()
     {
         base.Move();
-        if (transform.position.y < player.transform.position.x)
+        if (transform.position.y < player.transform.position.y)
             enemyMovement = new NormalMove();
     }
 }

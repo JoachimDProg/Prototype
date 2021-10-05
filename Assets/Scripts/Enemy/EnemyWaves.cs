@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyWaves : MonoBehaviour
@@ -12,27 +11,28 @@ public class EnemyWaves : MonoBehaviour
     [SerializeField] private Enemy enemyPrefab;
     [SerializeField] private int population = 0;
     [SerializeField] private float dequeueTimer = 0f;
+    [SerializeField] private float waveSpeed = 0f;
     private float canEmptyDistance = 5f;
     private bool canEmptyPool = false;
     private float sendTroopsTimer = 0f;
+    
+    public enum MovementType { Normal, Seek, Sine };
+    [HideInInspector] public MovementType movementType;
+    [HideInInspector] public int moveTypeFlag = 0;
 
-    [Header("Wave Movement Configuration")]
-    private IMovement waveMovement;
-    [SerializeField] private float waveSpeed = 0f;
+    [HideInInspector] public bool isSine = false;
+    [HideInInspector] public bool isInverted = false;
+    [HideInInspector] public float amplitude = 0.0f;
+    [HideInInspector] public float frequency = 0.0f;
+    [HideInInspector] public float offset = 0.0f;
 
-    private Dictionary<string, float> sineParam;
-    [SerializeField] private bool isSine = false;
-    [SerializeField] private bool isInverted = false;
-    [SerializeField] private float amplitude = 0f;
-    [SerializeField] private float frequency = 0f;
-    [SerializeField] private float offset = 0f;
+    // container to hold and pass parameters to enemy object
+    Dictionary<string, float> sineParam;
 
     void Start()
     {
         sendTroopsTimer = dequeueTimer;
         FillBase();
-        InitSineParam();
-        WaveMoveInit(isSine);
     }
 
     void Update()
@@ -80,7 +80,7 @@ public class EnemyWaves : MonoBehaviour
             {
                 Enemy enemy = enemyBase.Dequeue();
                 enemy.InitParameters(transform.position, transform.up, waveSpeed, ReturnToBase);
-                enemy.InitMove(WaveMoveInit(isSine), isSine, sineParam);
+                enemy.InitMove(WaveMoveInit(), isSine, sineParam);
                 enemy.gameObject.SetActive(true);
                 sendTroopsTimer = dequeueTimer;
             }
@@ -90,10 +90,17 @@ public class EnemyWaves : MonoBehaviour
         }
     }
 
-    private IMovement WaveMoveInit(bool sine)
+    private IMovement WaveMoveInit()
     {
-        if (sine)
+        if (moveTypeFlag == 0)
+            return new NormalMove();
+        else if (moveTypeFlag == 1)
+            return new SeekMove();
+        else if (moveTypeFlag == 2)
+        {
+            InitSineParam();
             return new SineMove();
+        }
         else
             return new NormalMove();
     }

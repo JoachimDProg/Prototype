@@ -13,11 +13,11 @@ public abstract class Enemy : MonoBehaviour
     protected float movementSpeed = 0f;
     protected float canShootTimer = 0f;
     protected bool canShoot = false; // for delaying shoot when entering bounds
+    protected Vector3 initialUp;
 
     [Header("Sine Configuration")]
     protected Dictionary<string, float> sineParam;
     protected bool isSine = false;
-    protected float sin = 0f;
 
     [Header("Screen Bound Parameters")]
     [SerializeField] protected bool hasEnteredBounds = false;
@@ -36,6 +36,7 @@ public abstract class Enemy : MonoBehaviour
         bounds = ScreenBoundaries.Instance;
         player = GameObject.FindGameObjectWithTag("Player"); // change to playerManager
         canShootTimer = shootPermissionTimer;
+        initialUp = transform.up;
 
         if (isSine)
         {
@@ -67,7 +68,7 @@ public abstract class Enemy : MonoBehaviour
 
     public virtual void Move()
     {
-        transform.position += enemyMovement.Move(transform.position, transform.up, movementSpeed);
+        transform.position += enemyMovement.Move(transform.position, initialUp, transform.up, movementSpeed);
     }
 
     protected abstract void Shoot();
