@@ -19,13 +19,13 @@ public abstract class Enemy : MonoBehaviour
     protected bool isSine = false;
 
     [Header("Screen Bound Parameters")]
-    [SerializeField] protected bool hasEnteredBounds = false;
-    [SerializeField] protected bool isInsideBounds = false;
+    protected bool hasEnteredBounds = false;
+    protected bool isInsideBounds = false;
     protected ScreenBoundaries bounds;
     protected Vector2 spriteSize;
 
     [Header("Object References")]
-    [SerializeField] protected GameObject player;
+    protected GameObject player;
 
     // Start is called before the first frame update
     protected virtual void Start()
@@ -42,6 +42,8 @@ public abstract class Enemy : MonoBehaviour
             SineMove sineMove = movement as SineMove;
             sineMove.sineParam = sineParam;
         }
+
+        Debug.Log(movement);
     }
 
     // Update is called once per frame

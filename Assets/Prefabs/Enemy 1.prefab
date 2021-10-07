@@ -124,9 +124,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shootPermissionTimer: 0
-  hasEnteredBounds: 0
-  isInsideBounds: 0
-  player: {fileID: 0}
+  player: {fileID: 3448736090211085759, guid: b35cb9957ee6f8e4eb1a3094996623c7, type: 3}
 --- !u!1001 &7164096987873796926
 PrefabInstance:
   m_ObjectHideFlags: 0

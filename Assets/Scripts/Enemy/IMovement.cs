@@ -10,7 +10,7 @@ public class NormalMove : IMovement
 {
     public Vector3 Move(Vector3 position, Vector3 initialUp, Vector3 currentUp, float movementSpeed)
     {
-        float posY = movementSpeed * Time.deltaTime * -1;
+        float posY = movementSpeed * Time.deltaTime * initialUp.y;
         Vector3 newPosition = new Vector3(0, posY);
 
         return newPosition;

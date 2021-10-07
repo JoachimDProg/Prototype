@@ -10,11 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 1686311631296694288}
   - component: {fileID: 4808497343790941952}
-  - component: {fileID: 1824814748}
   - component: {fileID: 7963681217035956876}
-  - component: {fileID: 295912207}
+  - component: {fileID: -6617370315829010481}
   m_Layer: 10
-  m_Name: Enemy 2
+  m_Name: Enemy 3
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -75,7 +74,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -8422201935682946831, guid: 344852206545f2948a11a8dde63ace31, type: 3}
+  m_Sprite: {fileID: 4635166433924638108, guid: d342033be9792f9449a6149aeb729db0, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -86,27 +85,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!50 &1824814748
-Rigidbody2D:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1686311631296694293}
-  m_BodyType: 1
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
-  m_GravityScale: 1
-  m_Material: {fileID: 0}
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 1
-  m_Constraints: 0
 --- !u!61 &7963681217035956876
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -124,7 +102,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.3125, y: 1.6875}
+    oldSize: {x: 0.6875, y: 0.6875}
     newSize: {x: 0.6875, y: 0.6875}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -133,7 +111,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.663767, y: 0.66847503}
   m_EdgeRadius: 0
---- !u!114 &295912207
+--- !u!114 &-6617370315829010481
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -142,14 +120,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1686311631296694293}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e79a9d035358d24fbd575df96bf36f8, type: 3}
+  m_Script: {fileID: 11500000, guid: 6da7659a21e653b418fa3535a974baf6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shootPermissionTimer: 2
-  rotationSpeed: 20
-  minRotation: 0.5
-  shootAngle: 3
-  seekCooldown: 1
+  shootPermissionTimer: 0
+  player: {fileID: 3448736090211085759, guid: b35cb9957ee6f8e4eb1a3094996623c7, type: 3}
 --- !u!1001 &7164096987873796926
 PrefabInstance:
   m_ObjectHideFlags: 0

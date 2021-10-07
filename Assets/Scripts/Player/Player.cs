@@ -12,6 +12,8 @@ public class Player : MonoBehaviour
     private Gun[] guns;
     private bool gunBoost = false;
     private Shield shield;
+    private bool isInvincible = false;
+    private float invincibilityTimer = 1f;
     
     [Header("Screen Bound Parameters")]
     private Vector2 spriteSize;
@@ -29,6 +31,7 @@ public class Player : MonoBehaviour
     {
         Move();
         Shoot();
+        UpdateInvincibilityTimer();
     }
 
     private void Move()
@@ -71,14 +74,35 @@ public class Player : MonoBehaviour
             if (powerUp.guns)
                 gunBoost = true;
             if (powerUp.shield)
+            {
                 shield.gameObject.SetActive(true);
+                invincibilityTimer = 1;
+            }
             if (powerUp.speed)
                 playerMoveSpeedNormal += speedBoost;
         }
 
         if (collision.gameObject.tag == "Enemy")
         {
-            gameObject.SetActive(false);
+            if (shield.gameObject.activeInHierarchy)
+            {
+                shield.gameObject.SetActive(false);
+                isInvincible = true;
+            }
+            else if (!isInvincible)
+                gameObject.SetActive(false);
+        }
+    }
+
+    private void UpdateInvincibilityTimer()
+    {
+        if (isInvincible)
+            invincibilityTimer -= Time.deltaTime;
+
+        if (invincibilityTimer <= 0)
+        {
+            invincibilityTimer = 1;
+            isInvincible = false;
         }
     }
 }
