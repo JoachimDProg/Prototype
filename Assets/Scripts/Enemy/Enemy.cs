@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,7 +7,7 @@ public abstract class Enemy : MonoBehaviour
     [Header("Enemy Configuration")]
     [SerializeField] protected float shootPermissionTimer;
     private Action<Enemy> returnToBase;
-    protected IMovement enemyMovement;
+    protected IMovement movement;
     protected Gun gun;
     protected float movementSpeed = 0f;
     protected float canShootTimer = 0f;
@@ -40,7 +39,7 @@ public abstract class Enemy : MonoBehaviour
 
         if (isSine)
         {
-            SineMove sineMove = enemyMovement as SineMove;
+            SineMove sineMove = movement as SineMove;
             sineMove.sineParam = sineParam;
         }
     }
@@ -57,7 +56,10 @@ public abstract class Enemy : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        returnToBase.Invoke(this);
+        if (collision.gameObject.tag == "Player Projectile")
+        {
+            returnToBase.Invoke(this);
+        }
     }
 
     private void CanReturnToBase()
@@ -68,7 +70,7 @@ public abstract class Enemy : MonoBehaviour
 
     public virtual void Move()
     {
-        transform.position += enemyMovement.Move(transform.position, initialUp, transform.up, movementSpeed);
+        transform.position += movement.Move(transform.position, initialUp, transform.up, movementSpeed);
     }
 
     protected abstract void Shoot();
@@ -107,7 +109,7 @@ public abstract class Enemy : MonoBehaviour
 
     public void InitMove(IMovement enemyMovement, bool isSine, Dictionary<string, float> sineParam)
     {
-        this.enemyMovement = enemyMovement;
+        this.movement = enemyMovement;
         this.isSine = isSine;
         this.sineParam = sineParam;
     }

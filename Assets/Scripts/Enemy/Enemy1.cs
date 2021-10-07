@@ -18,6 +18,6 @@ public class Enemy1 : Enemy
     {
         base.Move();
         if (transform.position.y < player.transform.position.y)
-            enemyMovement = new NormalMove();
+            movement = new NormalMove();
     }
 }

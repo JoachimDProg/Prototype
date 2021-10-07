@@ -5,10 +5,13 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     [Header("Player Configuration")]
-    [SerializeField] private float playerMoveSpeedNormal;
-    [SerializeField] private float playerMoveSpeedSlow;
-    private float playerMoveSpeed;
+    [SerializeField] private float playerMoveSpeedNormal = 0f;
+    [SerializeField] private float playerMoveSpeedSlow = 0f;
+    [SerializeField] private float speedBoost = 0f;
+    private float playerMoveSpeed = 0f;
     private Gun[] guns;
+    private bool gunBoost = false;
+    private Shield shield;
     
     [Header("Screen Bound Parameters")]
     private Vector2 spriteSize;
@@ -16,7 +19,8 @@ public class Player : MonoBehaviour
 
     void Start()
     {
-        guns = GetComponentsInChildren<Gun>();
+        guns = GetComponentsInChildren<Gun>(true);
+        shield = GetComponentInChildren<Shield>(true);
         spriteSize = GetComponent<SpriteRenderer>().bounds.extents;
         stageLimits = ScreenBoundaries.Instance;
     }
@@ -45,10 +49,36 @@ public class Player : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.Space))
         {
-            foreach(Gun gun in guns)
+            if (!gunBoost)
             {
-                gun.Shoot();
+                guns[0].Shoot();
             }
+            else
+            {
+                foreach (Gun gun in guns)
+                {
+                    gun.Shoot();
+                }
+            }
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Power Up")
+        {
+            PowerUp powerUp = collision.GetComponent<PowerUp>();
+            if (powerUp.guns)
+                gunBoost = true;
+            if (powerUp.shield)
+                shield.gameObject.SetActive(true);
+            if (powerUp.speed)
+                playerMoveSpeedNormal += speedBoost;
+        }
+
+        if (collision.gameObject.tag == "Enemy")
+        {
+            gameObject.SetActive(false);
         }
     }
 }

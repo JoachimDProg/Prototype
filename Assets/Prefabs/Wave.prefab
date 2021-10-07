@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2301999623631033045}
   - component: {fileID: 2301999623631033051}
   - component: {fileID: 2301999623631033044}
-  m_Layer: 13
+  m_Layer: 10
   m_Name: Wave
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -70,6 +70,8 @@ MonoBehaviour:
   population: 3
   dequeueTimer: 2
   waveSpeed: 5
+  movementType: 0
+  moveTypeFlag: 0
   isSine: 1
   isInverted: 0
   amplitude: 0
