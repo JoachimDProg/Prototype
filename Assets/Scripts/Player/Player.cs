@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
@@ -90,7 +91,11 @@ public class Player : MonoBehaviour
                 isInvincible = true;
             }
             else if (!isInvincible)
+            {
                 gameObject.SetActive(false);
+                SceneManager.LoadScene("Game Over Menu");
+            }
+                
         }
     }
 
