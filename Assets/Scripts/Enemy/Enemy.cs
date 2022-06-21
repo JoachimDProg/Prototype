@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,37 +6,44 @@ public abstract class Enemy : MonoBehaviour
 {
     [Header("Enemy Configuration")]
     [SerializeField] protected float shootPermissionTimer;
-    protected Gun gun;
     private Action<Enemy> returnToBase;
-    protected float movementSpeed;
-    protected float canShootTimer;
+    protected IMovement movement;
+    protected Gun gun;
+    protected float movementSpeed = 0f;
+    protected float canShootTimer = 0f;
     protected bool canShoot = false; // for delaying shoot when entering bounds
+    protected Vector3 initialUp;
 
     [Header("Sine Configuration")]
-    protected bool isSine;
-    protected bool inverted;
-    protected float amplitude;
-    protected float frequency;
-    protected float offset;
-    protected float sin = 0;
+    protected Dictionary<string, float> sineParam;
+    protected bool isSine = false;
 
     [Header("Screen Bound Parameters")]
-    [SerializeField] protected bool hasEnteredBounds = false;
-    [SerializeField] protected bool isInsideBounds;
+    protected bool hasEnteredBounds = false;
+    protected bool isInsideBounds = false;
     protected ScreenBoundaries bounds;
     protected Vector2 spriteSize;
 
     [Header("Object References")]
-    [SerializeField] protected GameObject player;
+    protected GameObject player;
 
     // Start is called before the first frame update
-     protected virtual void Start()
+    protected virtual void Start()
     {
         gun = GetComponentInChildren<Gun>();
         spriteSize = GetComponent<SpriteRenderer>().bounds.size;
         bounds = ScreenBoundaries.Instance;
         player = GameObject.FindGameObjectWithTag("Player"); // change to playerManager
         canShootTimer = shootPermissionTimer;
+        initialUp = transform.up;
+
+        if (isSine)
+        {
+            SineMove sineMove = movement as SineMove;
+            sineMove.sineParam = sineParam;
+        }
+
+        Debug.Log(movement);
     }
 
     // Update is called once per frame
@@ -47,37 +53,26 @@ public abstract class Enemy : MonoBehaviour
         UpdateBoundStatus(transform.position);
         UpdateShootPermissionTimer();
         Shoot();
-    }
-
-    private void Move()
-    {
-        Vector3 position = transform.position;
-
-        if (isSine)
-            sin = Sine(position);
-
-        float posX = movementSpeed * Time.deltaTime * sin;
-        float posY = movementSpeed * Time.deltaTime;
-
-        transform.position += new Vector3(posX, -posY);
-
-        if (hasEnteredBounds && bounds.DistanceFromBounds(transform.position) > spriteSize.y)
-            returnToBase.Invoke(this);
-    }
-
-    private float Sine(Vector3 position)
-    {
-        float sin = Mathf.Sin(position.y * frequency + (offset * Mathf.PI)) * amplitude;
-
-        if (inverted)
-            sin *= -1;
-
-        return sin;
+        CanReturnToBase();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        returnToBase.Invoke(this);
+        if (collision.gameObject.tag == "Player Projectile")
+        {
+            returnToBase.Invoke(this);
+        }
+    }
+
+    private void CanReturnToBase()
+    {
+        if (hasEnteredBounds && bounds.DistanceFromBounds(transform.position) > spriteSize.y)
+            returnToBase.Invoke(this);
+    }
+
+    public virtual void Move()
+    {
+        transform.position += movement.Move(transform.position, initialUp, transform.up, movementSpeed);
     }
 
     protected abstract void Shoot();
@@ -114,12 +109,10 @@ public abstract class Enemy : MonoBehaviour
         this.returnToBase = returnToBase;
     }
 
-    public void InitSine(bool isSine, bool inverted, float amplitude, float frequency, float offset)
+    public void InitMove(IMovement enemyMovement, bool isSine, Dictionary<string, float> sineParam)
     {
+        this.movement = enemyMovement;
         this.isSine = isSine;
-        this.inverted = inverted;
-        this.amplitude = amplitude;
-        this.frequency = frequency;
-        this.offset = offset;
+        this.sineParam = sineParam;
     }
 }

@@ -9,11 +9,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2301999623631033045}
-  - component: {fileID: 2301999623631033050}
   - component: {fileID: 2301999623631033051}
   - component: {fileID: 2301999623631033044}
-  m_Layer: 13
-  m_Name: Wave1
+  m_Layer: 10
+  m_Name: Wave
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -26,29 +25,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2301999623631033047}
-  m_LocalRotation: {x: -0, y: -0, z: 1, w: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 1, w: 0}
   m_LocalPosition: {x: -6.9, y: 10.6, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 180}
---- !u!58 &2301999623631033050
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2301999623631033047}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  serializedVersion: 2
-  m_Radius: 0.5
 --- !u!50 &2301999623631033051
 Rigidbody2D:
   serializedVersion: 4
@@ -84,11 +67,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 5
   enemyPrefab: {fileID: 1686311631296694287, guid: 9bfe488976858504184df4f19e9034ef, type: 3}
-  population: 5
-  dequeueTimer: 0.5
-  waveSpeed: 3
-  sine: 1
-  inverted: 0
-  amplitude: 5
-  frequency: 2
+  population: 3
+  dequeueTimer: 2
+  waveSpeed: 5
+  movementType: 0
+  moveTypeFlag: 0
+  isSine: 1
+  isInverted: 0
+  amplitude: 0
+  frequency: 0
   offset: 0

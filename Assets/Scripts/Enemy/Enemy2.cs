@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Enemy2 : Enemy
 {
@@ -30,12 +28,13 @@ public class Enemy2 : Enemy
             // calculate angle to rotate this frame in RAD
             float angleToRotate = angleToTarget * Time.deltaTime * rotationSpeed;
 
+
             // check if rotation is positive or negative
             float rotateSign = Mathf.Sign(angleToTarget);
             // calculate angle to rotate this frame in DEG
             float lookAngle = angleToTarget * Mathf.Rad2Deg * rotateSign;
 
-            Debug.Log("Look Angle: " + lookAngle);
+            // Debug.Log("Look Angle: " + lookAngle);
 
             // if rotation for this frame is too small, increase rotation
             /*if (angleToRotate >= -minRotation && angleToRotate < 0)
