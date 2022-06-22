@@ -7,8 +7,8 @@ public class EnemyWaves : MonoBehaviour
     [SerializeField] private float moveSpeed = 0f;
 
     [Header("Wave Configuration")]
-    [SerializeField] private Queue<Enemy> enemyBase;
-    [SerializeField] private Enemy enemyPrefab;
+    [SerializeField] private Queue<Enemy> enemyBase = null;
+    [SerializeField] private Enemy enemyPrefab = null;
     [SerializeField] private int population = 0;
     [SerializeField] private float dequeueTimer = 0f;
     [SerializeField] private float waveSpeed = 0f;

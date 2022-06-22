@@ -14,7 +14,6 @@ public class PowerUp : MonoBehaviour
     [SerializeField] public bool speed = false;
     [SerializeField] public bool shield = false;
 
-
     void Start()
     {
         movement = new NormalMove();

@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class Logo : MonoBehaviour
 {
-    [SerializeField] private GameObject startPoint;
-    [SerializeField] private GameObject endPoint;
-    [SerializeField] private AudioClip mainMenuTheme;
+    [SerializeField] private GameObject startPoint = null;
+    [SerializeField] private GameObject endPoint  = null;
+    [SerializeField] private AudioClip mainMenuTheme = null;
     Vector3 startPointPos;
     Vector3 endPointPos;
     float time = 0;

@@ -5,16 +5,16 @@ using UnityEngine;
 public class Boss : MonoBehaviour
 {
     // objects references
-    [SerializeField] private Player player;
-    [SerializeField] private GameObject[] points;
-    float time = 0;
-    [SerializeField] AnimationCurve animationCurve;
+    [SerializeField] private Player player = null;
+    [SerializeField] private GameObject[] points = null;
+    float time = 0.0f;
+    [SerializeField] AnimationCurve animationCurve = null;
 
     [Header("Enemy Configuration")]
-    [SerializeField] private float movementRate;
-    [SerializeField] private float movementSpeed;
-    [SerializeField] private float movementTime;
-    [SerializeField] private float shootRange;
+    [SerializeField] private float movementRate = 0.0f;
+    [SerializeField] private float movementSpeed = 0.0f;
+    [SerializeField] private float movementTime = 0.0f;
+    [SerializeField] private float shootRange = 0.0f;
 
     [Header("Observation Variable")]
     private Gun gun;

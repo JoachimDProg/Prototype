@@ -42,8 +42,6 @@ public abstract class Enemy : MonoBehaviour
             SineMove sineMove = movement as SineMove;
             sineMove.sineParam = sineParam;
         }
-
-        Debug.Log(movement);
     }
 
     // Update is called once per frame

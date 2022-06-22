@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class Projectile : MonoBehaviour
 {
     [Header("Projectile Configuration")]
-    [SerializeField] protected float projectileSpeed;
-    [SerializeField] protected int projectileDamage;
+    [SerializeField] protected float projectileSpeed = 0.0f;
+    [SerializeField] protected int projectileDamage = 0;
     protected Vector2 velocity;
 
     [Header("Screen Bound Parameters")]

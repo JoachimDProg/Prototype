@@ -11,7 +11,7 @@ public class Enemy1 : Enemy
 
     protected override void Shoot()
     {
-        
+
     }
 
     public override void Move()

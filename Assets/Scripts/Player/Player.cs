@@ -72,13 +72,16 @@ public class Player : MonoBehaviour
         if (collision.gameObject.tag == "Power Up")
         {
             PowerUp powerUp = collision.GetComponent<PowerUp>();
+
             if (powerUp.guns)
                 gunBoost = true;
+
             if (powerUp.shield)
             {
                 shield.gameObject.SetActive(true);
                 invincibilityTimer = 1;
             }
+
             if (powerUp.speed)
                 playerMoveSpeedNormal += speedBoost;
         }

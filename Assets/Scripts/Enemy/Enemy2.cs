@@ -2,13 +2,13 @@
 
 public class Enemy2 : Enemy
 {
-    [SerializeField] private float rotationSpeed;
-    [SerializeField] [Range(0.0f, 1.0f)] private float minRotation;
-    [SerializeField] [Range(1, 10)] private int shootAngle;
-    [SerializeField] private float seekCooldown;
+    [SerializeField] private float rotationSpeed = default;
+    [SerializeField] [Range(0.0f, 1.0f)] private float minRotation = default;
+    [SerializeField] [Range(1, 10)] private int shootAngle = default;
+    [SerializeField] private float seekCooldown = default;
     private float canSeekTimer;
     private bool canSeek = true;
-    
+
 
     protected override void Start()
     {
@@ -63,7 +63,7 @@ public class Enemy2 : Enemy
             {
                 canSeek = true;
                 canSeekTimer = seekCooldown;
-            }   
+            }
         }
     }
 }
