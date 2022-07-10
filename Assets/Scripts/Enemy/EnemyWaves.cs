@@ -27,10 +27,17 @@ public class EnemyWaves : MonoBehaviour
     [HideInInspector] public float offset = 0.0f;
 
     // container to hold and pass parameters to enemy object
-    Dictionary<string, float> sineParam;
+    Dictionary<string, float> sineParam = new Dictionary<string, float>();
 
     void Start()
     {
+        /*Debug.Log(this.name + " isSine: " + isSine);
+        Debug.Log(Time.time);*/
+        /*Debug.Log(this.name + " isInverted: " + isInverted);
+        Debug.Log(this.name + " amplitude: " + amplitude);
+        Debug.Log(this.name + " frequency: " + frequency);
+        Debug.Log(this.name + " offset " + offset);*/
+
         sendTroopsTimer = dequeueTimer;
         FillBase();
     }
@@ -65,6 +72,7 @@ public class EnemyWaves : MonoBehaviour
         for (int i = 0; i < population; i++)
         {
             Enemy enemy = Instantiate(enemyPrefab, transform.position, Quaternion.identity);
+            enemy.InitMove(WaveMoveInit(), isSine, sineParam);
             enemy.gameObject.SetActive(false);
             enemyBase.Enqueue(enemy);
         }
@@ -80,7 +88,6 @@ public class EnemyWaves : MonoBehaviour
             {
                 Enemy enemy = enemyBase.Dequeue();
                 enemy.InitParameters(transform.position, transform.up, waveSpeed, ReturnToBase);
-                enemy.InitMove(WaveMoveInit(), isSine, sineParam);
                 enemy.gameObject.SetActive(true);
                 sendTroopsTimer = dequeueTimer;
             }
@@ -108,12 +115,11 @@ public class EnemyWaves : MonoBehaviour
     private void InitSineParam()
     {
         sineParam = new Dictionary<string, float>();
-        int inverted = 1;
+        int inverted = isInverted ? -1 : 1;
 
         sineParam.Add("frequency", frequency);
         sineParam.Add("amplitude", amplitude);
         sineParam.Add("offset", offset);
-        if (isInverted) inverted = -1;
         sineParam.Add("inverted", inverted);
     }
 

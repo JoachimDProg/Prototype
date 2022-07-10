@@ -1,4 +1,5 @@
 using UnityEditor;
+using UnityEngine;
 
 [CustomEditor(typeof(EnemyWaves))]
 [CanEditMultipleObjects]
@@ -22,26 +23,25 @@ public class WaveEditor : Editor
         EditorGUILayout.Space();
         EditorGUILayout.PropertyField(movementType);
 
-        switch (movementType.intValue)
+        if(movementType.intValue == 0)
         {
-            case 0:
-                enemyWaves.moveTypeFlag = 0;
-                break;
-
-            case 1:
-                enemyWaves.moveTypeFlag = 1;
-                break;
-
-            case 2:
-                // create indent and sineParameters menu
-                EditorGUI.indentLevel++;
-                enemyWaves.isSine = true;
-                enemyWaves.isInverted = EditorGUILayout.Toggle("Inverted", enemyWaves.isInverted);
-                enemyWaves.amplitude = EditorGUILayout.FloatField("Amplitude", enemyWaves.amplitude);
-                enemyWaves.frequency = EditorGUILayout.FloatField("Frequency", enemyWaves.frequency);
-                enemyWaves.offset = EditorGUILayout.FloatField("Offset", enemyWaves.offset);
-                enemyWaves.moveTypeFlag = 2;
-                break;
+            enemyWaves.isSine = false;
+            enemyWaves.moveTypeFlag = 0;
+        }
+        else if (movementType.intValue == 1)
+        {
+            enemyWaves.isSine = false;
+            enemyWaves.moveTypeFlag = 1;
+        }
+        else if(movementType.intValue == 2)
+        {
+            EditorGUI.indentLevel++;
+            enemyWaves.isSine = true;
+            enemyWaves.isInverted = EditorGUILayout.Toggle("Inverted", enemyWaves.isInverted);
+            enemyWaves.amplitude = EditorGUILayout.FloatField("Amplitude", enemyWaves.amplitude);
+            enemyWaves.frequency = EditorGUILayout.FloatField("Frequency", enemyWaves.frequency);
+            enemyWaves.offset = EditorGUILayout.FloatField("Offset", enemyWaves.offset);
+            enemyWaves.moveTypeFlag = 2;
         }
 
         serializedObject.ApplyModifiedProperties();

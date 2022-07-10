@@ -15,13 +15,13 @@ public abstract class Enemy : MonoBehaviour
     protected Vector3 initialUp;
 
     [Header("Sine Configuration")]
-    protected Dictionary<string, float> sineParam;
+    protected Dictionary<string, float> sineParam = default;
     protected bool isSine = false;
 
     [Header("Screen Bound Parameters")]
     protected bool hasEnteredBounds = false;
     protected bool isInsideBounds = false;
-    protected ScreenBoundaries bounds;
+    protected ScreenBoundaries screenBoundaries;
     protected Vector2 spriteSize;
 
     [Header("Object References")]
@@ -32,14 +32,15 @@ public abstract class Enemy : MonoBehaviour
     {
         gun = GetComponentInChildren<Gun>();
         spriteSize = GetComponent<SpriteRenderer>().bounds.size;
-        bounds = ScreenBoundaries.Instance;
+        screenBoundaries = ScreenBoundaries.Instance;
         player = GameObject.FindGameObjectWithTag("Player"); // change to playerManager
         canShootTimer = shootPermissionTimer;
         initialUp = transform.up;
 
         if (isSine)
         {
-            SineMove sineMove = movement as SineMove;
+            SineMove sineMove = new SineMove();
+            sineMove = movement as SineMove;
             sineMove.sineParam = sineParam;
         }
     }
@@ -62,18 +63,17 @@ public abstract class Enemy : MonoBehaviour
         }
     }
 
-    private void CanReturnToBase()
-    {
-        if (hasEnteredBounds && bounds.DistanceFromBounds(transform.position) > spriteSize.y)
-            returnToBase.Invoke(this);
-    }
-
     public virtual void Move()
     {
         transform.position += movement.Move(transform.position, initialUp, transform.up, movementSpeed);
     }
+    protected void UpdateBoundStatus(Vector3 position)
+    {
+        if (screenBoundaries.IsInsideBounds(position))
+            hasEnteredBounds = true;
 
-    protected abstract void Shoot();
+        isInsideBounds = screenBoundaries.IsInsideBounds(position);
+    }
 
     protected void UpdateShootPermissionTimer()
     {
@@ -89,12 +89,12 @@ public abstract class Enemy : MonoBehaviour
         }
     }
 
-    protected void UpdateBoundStatus(Vector3 position)
-    {
-        if (bounds.IsInsideBounds(position))
-            hasEnteredBounds = true;
+    protected abstract void Shoot();
 
-        isInsideBounds = bounds.IsInsideBounds(position);
+    private void CanReturnToBase()
+    {
+        if (hasEnteredBounds && screenBoundaries.DistanceFromBounds(transform.position) > spriteSize.y)
+            returnToBase.Invoke(this);
     }
 
     public void InitParameters(Vector2 position, Vector2 direction, float speed, Action<Enemy> returnToBase)

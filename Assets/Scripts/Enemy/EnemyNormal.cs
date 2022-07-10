@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy3 : Enemy
+public class EnemyNormal : Enemy
 {
     protected override void Start()
     {
@@ -12,5 +12,10 @@ public class Enemy3 : Enemy
     protected override void Shoot()
     {
 
+    }
+
+    public override void Move()
+    {
+        base.Move();
     }
 }

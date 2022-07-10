@@ -9,6 +9,8 @@ public class LaserGun : Gun
         Projectile laser = projectileMagazine.Dequeue();
         laser.gameObject.SetActive(true);
         laser.InitParameters(transform.position, transform.up, RefillMagazine);
-        audioSource.Play();
+
+        if(audioSource.isActiveAndEnabled)
+            audioSource.Play();
     }
 }
