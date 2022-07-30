@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PowerUp : MonoBehaviour
@@ -11,8 +9,9 @@ public class PowerUp : MonoBehaviour
 
     [Header("Power Up Type")]
     [SerializeField] public bool guns = false;
-    [SerializeField] public bool speed = false;
     [SerializeField] public bool shield = false;
+    [SerializeField] public bool speed = false;
+   
 
     void Start()
     {

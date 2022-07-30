@@ -45,7 +45,7 @@ public class EnemySeeker : Enemy
 
             if (canShoot && lookAngle <= shootAngle)
             {
-                //gun.Shoot();
+                gun.Shoot();
                 canSeek = false;
             }
         }

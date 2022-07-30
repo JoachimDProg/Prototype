@@ -30,7 +30,6 @@ public abstract class Projectile : MonoBehaviour
         returnToPool.Invoke(this);
 
         /*if (collision.CompareTag("Player"))*/
-            // bla bla
     }
 
     protected virtual void Move()

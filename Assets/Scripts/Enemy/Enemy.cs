@@ -63,6 +63,12 @@ public abstract class Enemy : MonoBehaviour
         }
     }
 
+    private void CanReturnToBase()
+    {
+        if (hasEnteredBounds && screenBoundaries.DistanceFromBounds(transform.position) > spriteSize.y)
+            returnToBase.Invoke(this);
+    }
+
     public virtual void Move()
     {
         transform.position += movement.Move(transform.position, initialUp, transform.up, movementSpeed);
@@ -90,12 +96,6 @@ public abstract class Enemy : MonoBehaviour
     }
 
     protected abstract void Shoot();
-
-    private void CanReturnToBase()
-    {
-        if (hasEnteredBounds && screenBoundaries.DistanceFromBounds(transform.position) > spriteSize.y)
-            returnToBase.Invoke(this);
-    }
 
     public void InitParameters(Vector2 position, Vector2 direction, float speed, Action<Enemy> returnToBase)
     {

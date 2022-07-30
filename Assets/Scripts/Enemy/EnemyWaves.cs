@@ -12,8 +12,8 @@ public class EnemyWaves : MonoBehaviour
     [SerializeField] private int population = 0;
     [SerializeField] private float dequeueTimer = 0f;
     [SerializeField] private float waveSpeed = 0f;
-    private float canEmptyDistance = 5f;
     private bool canEmptyPool = false;
+    private float canEmptyDistance = 5f;
     private float sendTroopsTimer = 0f;
     
     public enum MovementType { Normal, Seek, Sine };
@@ -27,17 +27,10 @@ public class EnemyWaves : MonoBehaviour
     [HideInInspector] public float offset = 0.0f;
 
     // container to hold and pass parameters to enemy object
-    Dictionary<string, float> sineParam = new Dictionary<string, float>();
+    Dictionary<string, float> sineParam;
 
     void Start()
     {
-        /*Debug.Log(this.name + " isSine: " + isSine);
-        Debug.Log(Time.time);*/
-        /*Debug.Log(this.name + " isInverted: " + isInverted);
-        Debug.Log(this.name + " amplitude: " + amplitude);
-        Debug.Log(this.name + " frequency: " + frequency);
-        Debug.Log(this.name + " offset " + offset);*/
-
         sendTroopsTimer = dequeueTimer;
         FillBase();
     }
@@ -78,9 +71,9 @@ public class EnemyWaves : MonoBehaviour
         }
     }
 
-    private void EmptyBase(bool canStart)
+    private void EmptyBase(bool canEmpty)
     {
-        if (canStart)
+        if (canEmpty)
         {
             sendTroopsTimer -= Time.deltaTime;
 

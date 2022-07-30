@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class LaserGun : Gun
+﻿public class LaserGun : Gun
 {
     protected override void OnShoot()
     {
