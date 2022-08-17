@@ -28,26 +28,20 @@ public class Boss : MonoBehaviour
         initialPosition = transform.position;
         gun = GetComponentInChildren<Gun>();
         movementCooldownTimer = 0;
+
+        InitMove();
     }
 
     // Update is called once per frame
     void Update()
     {
-        InitMove();
         Move();
-        Shoot();
+        //Shoot();
     }
 
     private void InitMove()
     {
-        // if cooldown is finished, reset cooldown and register current x player position
-        if (movementCooldownTimer <= 0)
-        {
-            movementCooldownTimer = movementRate;
-            playerPosition = new Vector3(player.transform.position.x, initialPosition.y, 0);
-        }
-
-        Move();
+        transform.position = points[0].transform.position;
     }
 
     private void Move()
@@ -60,7 +54,7 @@ public class Boss : MonoBehaviour
         // move towards player position each frame
         // transform.position = Vector3.MoveTowards(transform.position, playerPosition, movementSpeed * Time.deltaTime);
 
-        if (time <= movementTime)
+        if (time < movementTime)
         {
             // Lerp Move with ease
             // float newt = time < 0.5 ? 2 * time * time * time : 1 - Mathf.Pow(-2 * time + 2, 3) / 2;
@@ -70,16 +64,33 @@ public class Boss : MonoBehaviour
             // transform.position = CalculateQuadBezier(points[0].transform.position, points[1].transform.position, points[2].transform.position, newt / 60);
             float t = time / movementTime;
             t = Mathf.Clamp01(t);
-            t = animationCurve.Evaluate(t);
+            //t = animationCurve.Evaluate(t);
 
             transform.position = Vector2.Lerp(Vector2.Lerp(points[0].transform.position, points[1].transform.position, t),
                                               Vector2.Lerp(points[1].transform.position, points[2].transform.position, t),
                                               t);
             time += Time.deltaTime;
         }
+        else if (time > movementTime)
+        {
+            while(transform.position.x != points[0].transform.position.x)
+            {
+                float t = time / movementTime;
+                t = Mathf.Clamp01(t);
+                //t = animationCurve.Evaluate(t);
+
+                transform.position = Vector2.Lerp(points[2].transform.position, points[0].transform.position, t);
+                time -= Time.deltaTime;
+
+                if (time <= 0) 
+                    time = 0.0f;
+            }
+        }
+
+        Debug.Log("Time: " + time);
 
         // decrease cooldown each frame
-        movementCooldownTimer -= Time.deltaTime;
+        //movementCooldownTimer -= Time.deltaTime;
     }
 
     private void Shoot()
