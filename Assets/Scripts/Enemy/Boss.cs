@@ -1,13 +1,12 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Boss : MonoBehaviour
 {
     // objects references
     [SerializeField] private Player player = null;
+    [SerializeField] private GameObject initialPoint = null;
     [SerializeField] private GameObject[] points = null;
-    float time = 0.0f;
     [SerializeField] AnimationCurve animationCurve = null;
 
     [Header("Enemy Configuration")]
@@ -22,6 +21,15 @@ public class Boss : MonoBehaviour
     private Vector3 playerPosition;
     private float movementCooldownTimer;
 
+    // Lerp variables
+    float time = 0.0f;
+    bool hasEnteredScene = false;
+    private float movementTimeInitial;
+    private int destinationPointIndex;
+    private Vector2 initialPointPosition;
+    private Vector2 currentPointPosition;
+    private Vector2 destinationPointPosition;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -29,68 +37,93 @@ public class Boss : MonoBehaviour
         gun = GetComponentInChildren<Gun>();
         movementCooldownTimer = 0;
 
+        // Lerp init
+        movementTimeInitial = movementTime;
+        destinationPointIndex = 1;
+        initialPointPosition = initialPoint.transform.position;
+        currentPointPosition = points[0].transform.position;
+        destinationPointPosition = points[1].transform.position;
+
         InitMove();
     }
 
     // Update is called once per frame
     void Update()
     {
-        Move();
+        if (!hasEnteredScene)
+            EnterScene();
+        else
+            Move();
         //Shoot();
     }
 
     private void InitMove()
     {
-        transform.position = points[0].transform.position;
+        transform.position = initialPointPosition;
     }
 
     private void Move()
     {
-        /*if (Vector2.Distance(new Vector3(transform.position.x, 0), new Vector3(player.transform.position.x, 0)) < playerRange)
-        {
-            playerPosition = new Vector3(player.transform.position.x, player.transform.position.y, 0);
-        }*/
-
-        // move towards player position each frame
-        // transform.position = Vector3.MoveTowards(transform.position, playerPosition, movementSpeed * Time.deltaTime);
-
         if (time < movementTime)
         {
-            // Lerp Move with ease
-            // float newt = time < 0.5 ? 2 * time * time * time : 1 - Mathf.Pow(-2 * time + 2, 3) / 2;
-            // float newt = time * time * time;
-            // transform.position = Vector3.Lerp(points[0].transform.position, points[1].transform.position, newt / movementSpeed);
-
-            // transform.position = CalculateQuadBezier(points[0].transform.position, points[1].transform.position, points[2].transform.position, newt / 60);
             float t = time / movementTime;
             t = Mathf.Clamp01(t);
-            //t = animationCurve.Evaluate(t);
+            t = animationCurve.Evaluate(t);
 
-            transform.position = Vector2.Lerp(Vector2.Lerp(points[0].transform.position, points[1].transform.position, t),
-                                              Vector2.Lerp(points[1].transform.position, points[2].transform.position, t),
-                                              t);
+            transform.position = Vector2.Lerp(currentPointPosition, destinationPointPosition, t);
             time += Time.deltaTime;
-        }
-        else if (time > movementTime)
-        {
-            while(transform.position.x != points[0].transform.position.x)
+
+            if (time > movementTime)
             {
-                float t = time / movementTime;
-                t = Mathf.Clamp01(t);
-                //t = animationCurve.Evaluate(t);
+                destinationPointIndex++;
+                if (destinationPointIndex >= points.Length)
+                    destinationPointIndex = 0;
 
-                transform.position = Vector2.Lerp(points[2].transform.position, points[0].transform.position, t);
-                time -= Time.deltaTime;
+                // reset times
+                //movementTime = movementTimeInitial;
+                time = 0;
 
-                if (time <= 0) 
-                    time = 0.0f;
+                // go to next destination
+                currentPointPosition = destinationPointPosition;
+                destinationPointPosition = points[destinationPointIndex].transform.position;
+
+                /// TODO wait between point
+                //StartCoroutine(WaitBetweenMoves());
             }
+            Debug.Log(t);
         }
-
-        Debug.Log("Time: " + time);
 
         // decrease cooldown each frame
         //movementCooldownTimer -= Time.deltaTime;
+    }
+
+    private void EnterScene()
+    {
+        float t = time / movementTime;
+        t = Mathf.Clamp01(t);
+
+        time += Time.deltaTime;
+
+        transform.position = Vector2.Lerp(initialPointPosition, currentPointPosition, t);
+
+        if (transform.position == points[0].transform.position)
+        {
+            StartCoroutine(BossWait());
+        }
+    }
+
+    IEnumerator BossWait()
+    {
+        /// TODO wait is more than 1 sec
+        yield return new WaitForSecondsRealtime(1);
+
+        hasEnteredScene = true;
+        time = 0;
+    }
+
+    IEnumerator WaitBetweenMoves()
+    {
+        yield return new WaitForSeconds(1);
     }
 
     private void Shoot()
