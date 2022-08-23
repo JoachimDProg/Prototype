@@ -16,15 +16,13 @@ public class Boss : MonoBehaviour
     [SerializeField] private float shootRange = 0.0f;
 
     [Header("Observation Variable")]
-    private Gun gun;
-    private Vector3 initialPosition;
+    [SerializeField] private Gun[] guns;
     private Vector3 playerPosition;
     private float movementCooldownTimer;
 
     // Lerp variables
-    float time = 0.0f;
+    [SerializeField] float time = 0.0f;
     bool hasEnteredScene = false;
-    private float movementTimeInitial;
     private int destinationPointIndex;
     private Vector2 initialPointPosition;
     private Vector2 currentPointPosition;
@@ -33,12 +31,10 @@ public class Boss : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        initialPosition = transform.position;
-        gun = GetComponentInChildren<Gun>();
+        guns = GetComponentsInChildren<Gun>();
         movementCooldownTimer = 0;
 
         // Lerp init
-        movementTimeInitial = movementTime;
         destinationPointIndex = 1;
         initialPointPosition = initialPoint.transform.position;
         currentPointPosition = points[0].transform.position;
@@ -54,7 +50,6 @@ public class Boss : MonoBehaviour
             EnterScene();
         else
             Move();
-        //Shoot();
     }
 
     private void InitMove()
@@ -71,26 +66,13 @@ public class Boss : MonoBehaviour
             t = animationCurve.Evaluate(t);
 
             transform.position = Vector2.Lerp(currentPointPosition, destinationPointPosition, t);
+
             time += Time.deltaTime;
 
             if (time > movementTime)
             {
-                destinationPointIndex++;
-                if (destinationPointIndex >= points.Length)
-                    destinationPointIndex = 0;
-
-                // reset times
-                //movementTime = movementTimeInitial;
-                time = 0;
-
-                // go to next destination
-                currentPointPosition = destinationPointPosition;
-                destinationPointPosition = points[destinationPointIndex].transform.position;
-
-                /// TODO wait between point
-                //StartCoroutine(WaitBetweenMoves());
+                StartCoroutine(WaitBetweenMoves());
             }
-            Debug.Log(t);
         }
 
         // decrease cooldown each frame
@@ -100,7 +82,6 @@ public class Boss : MonoBehaviour
     private void EnterScene()
     {
         float t = time / movementTime;
-        t = Mathf.Clamp01(t);
 
         time += Time.deltaTime;
 
@@ -114,22 +95,33 @@ public class Boss : MonoBehaviour
 
     IEnumerator BossWait()
     {
-        /// TODO wait is more than 1 sec
-        yield return new WaitForSecondsRealtime(1);
+        yield return new WaitForSeconds(1);
 
         hasEnteredScene = true;
-        time = 0;
+        time = 0.0f;
     }
 
     IEnumerator WaitBetweenMoves()
     {
+        Shoot();
+
         yield return new WaitForSeconds(1);
+
+        destinationPointIndex++;
+        if (destinationPointIndex >= points.Length)
+            destinationPointIndex = 0;
+
+        // reset times
+        time = 0.0f;
+
+        // go to next destination
+        currentPointPosition = destinationPointPosition;
+        destinationPointPosition = points[destinationPointIndex].transform.position;
     }
 
     private void Shoot()
     {
-        // if player is within a certain range in the x axis
-        if (Vector2.Distance(new Vector3(transform.position.x, 0), new Vector3(player.transform.position.x, 0)) < shootRange)
+        foreach (Gun gun in guns)
         {
             gun.Shoot();
         }
