@@ -12,7 +12,7 @@ public abstract class Projectile : MonoBehaviour
     protected Vector2 spriteSize;
     protected ScreenBoundaries bounds;
 
-    private Action<Projectile> returnToPool;
+    protected Action<Projectile> returnToPool;
 
     private void Start()
     {
@@ -23,6 +23,7 @@ public abstract class Projectile : MonoBehaviour
     void Update()
     {
         Move();
+        ReturnToPoolWhenOutOfBounds();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -35,7 +36,10 @@ public abstract class Projectile : MonoBehaviour
     protected virtual void Move()
     {
         transform.position += new Vector3(velocity.x, velocity.y) * Time.deltaTime;
+    }
 
+    private void ReturnToPoolWhenOutOfBounds()
+    {
         if (bounds.DistanceFromBounds(transform.position) > spriteSize.y)
         {
             returnToPool.Invoke(this);
