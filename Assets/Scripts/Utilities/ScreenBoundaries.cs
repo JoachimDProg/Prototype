@@ -4,17 +4,27 @@ public class ScreenBoundaries : MonoBehaviour
 {
     public static ScreenBoundaries Instance;
     public Bounds screenBounds;
-    
+
     [Header("Stage Limit")]
     private float xMin;
     private float xMax;
     private float yMin;
     private float yMax;
-    
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(this);
+        }
+        else
+        {
+            Instance = this;
+        }
+    }
+
     void Start()
     {
-        Instance = this;
-
         Camera gameCamera = Camera.main;
         xMin = gameCamera.ViewportToWorldPoint(new Vector3(0, 0, 0)).x;
         xMax = gameCamera.ViewportToWorldPoint(new Vector3(1, 0, 0)).x;
@@ -24,7 +34,7 @@ public class ScreenBoundaries : MonoBehaviour
         float verticalSize = yMax - yMin;
         float horizontalSize = xMax - xMin;
 
-        screenBounds = new Bounds(new Vector3(0,0,0), new Vector3(horizontalSize, verticalSize, 0));
+        screenBounds = new Bounds(new Vector3(0, 0, 0), new Vector3(horizontalSize, verticalSize, 0));
     }
 
     public Vector2 ClampPlayerPosition(Vector2 position, Vector2 playerSpriteSize)

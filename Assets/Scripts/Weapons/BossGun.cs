@@ -4,9 +4,9 @@ public class BossGun : Gun
     {
         // TODO change to bullet pattern
         // TODO create diverse bullet pattern
-        Projectile laser = projectileMagazine.Dequeue();
-        laser.gameObject.SetActive(true);
-        laser.InitParameters(transform.position, transform.up, RefillMagazine);
+        Projectile bossProjectile = projectileMagazine.Dequeue();
+        bossProjectile.gameObject.SetActive(true);
+        bossProjectile.InitParameters(transform.position, transform.up, RefillMagazine);
 
         /*if (audioSource.isActiveAndEnabled)
             audioSource.Play();*/

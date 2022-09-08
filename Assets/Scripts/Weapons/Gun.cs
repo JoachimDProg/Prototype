@@ -25,7 +25,7 @@ public abstract class Gun : MonoBehaviour
         UpdateShootCooldown();
     }
 
-    private void FillMagazine()
+    protected void FillMagazine()
     {
         projectileMagazine = new Queue<Projectile>();
 

@@ -14,10 +14,15 @@ public abstract class Projectile : MonoBehaviour
 
     protected Action<Projectile> returnToPool;
 
-    private void Start()
+    private void Awake()
     {
         bounds = ScreenBoundaries.Instance;
         spriteSize = GetComponent<SpriteRenderer>().bounds.extents;
+    }
+
+    private void Start()
+    {
+
     }
 
     void Update()
@@ -33,17 +38,17 @@ public abstract class Projectile : MonoBehaviour
         /*if (collision.CompareTag("Player"))*/
     }
 
-    protected virtual void Move()
-    {
-        transform.position += new Vector3(velocity.x, velocity.y) * Time.deltaTime;
-    }
-
     private void ReturnToPoolWhenOutOfBounds()
     {
         if (bounds.DistanceFromBounds(transform.position) > spriteSize.y)
         {
             returnToPool.Invoke(this);
         }
+    }
+
+    protected virtual void Move()
+    {
+        transform.position += new Vector3(velocity.x, velocity.y) * Time.deltaTime;
     }
 
     public void InitParameters(Vector2 position, Vector2 direction, Action<Projectile> returnToPool)
