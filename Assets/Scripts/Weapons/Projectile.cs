@@ -7,6 +7,7 @@ public abstract class Projectile : MonoBehaviour
     [SerializeField] protected float projectileSpeed = 0.0f;
     [SerializeField] protected int projectileDamage = 0;
     protected Vector2 velocity;
+    protected Vector2 direction;
 
     [Header("Screen Bound Parameters")]
     protected Vector2 spriteSize;
@@ -40,7 +41,7 @@ public abstract class Projectile : MonoBehaviour
 
     private void ReturnToPoolWhenOutOfBounds()
     {
-        if (bounds.DistanceFromBounds(transform.position) > spriteSize.y)
+        if (bounds.DistanceFromBounds(transform.position) > (spriteSize.y + spriteSize.x) / 2)
         {
             returnToPool.Invoke(this);
         }
@@ -48,16 +49,17 @@ public abstract class Projectile : MonoBehaviour
 
     protected virtual void Move()
     {
+        velocity = direction * projectileSpeed;
         transform.position += new Vector3(velocity.x, velocity.y) * Time.deltaTime;
     }
 
     public void InitParameters(Vector2 position, Vector2 direction, Action<Projectile> returnToPool)
     {
         transform.position = position;
+        this.direction = direction;
+        this.returnToPool = returnToPool;
+
         Vector3 eulerAngles = new Vector3(0, 0, Vector2.SignedAngle(Vector2.up, direction));
         transform.eulerAngles = eulerAngles;
-        velocity = direction * projectileSpeed;
-
-        this.returnToPool = returnToPool;
     }
 }

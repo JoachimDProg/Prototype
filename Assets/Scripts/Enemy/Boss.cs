@@ -28,8 +28,7 @@ public class Boss : MonoBehaviour
     private Vector2 currentPointPosition;
     private Vector2 destinationPointPosition;
 
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         guns = GetComponentsInChildren<Gun>();
         movementCooldownTimer = 0;
@@ -43,8 +42,7 @@ public class Boss : MonoBehaviour
         InitMove();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
         if (!hasEnteredScene)
             EnterScene();
@@ -74,9 +72,6 @@ public class Boss : MonoBehaviour
                 StartCoroutine(WaitBetweenMoves());
             }
         }
-
-        // decrease cooldown each frame
-        //movementCooldownTimer -= Time.deltaTime;
     }
 
     private void EnterScene()

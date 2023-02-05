@@ -26,14 +26,12 @@ public static class Math
     // Return Vector between objects
     public static Vector3 GetVector(Vector3 point1, Vector3 point2)
     {
-        Vector3 vectorBetweenPoints = new Vector3(point2.x - point1.x, point2.y - point1.y, point2.z - point1.z);
-        return vectorBetweenPoints;
+        return new Vector3(point2.x - point1.x, point2.y - point1.y, point2.z - point1.z);
     }
 
     public static Vector3 GetVectorExt(this Vector3 point1, Vector3 point2)
     {
-        Vector3 vectorBetweenPoints = new Vector3(point2.x - point1.x, point2.y - point1.y, point2.z - point1.z);
-        return vectorBetweenPoints;
+        return new Vector3(point2.x - point1.x, point2.y - point1.y, point2.z - point1.z);
     }
 
     // Return the normal form of a vector
