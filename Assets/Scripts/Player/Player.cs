@@ -38,10 +38,7 @@ public class Player : MonoBehaviour
 
     private void Move()
     {
-        if (Input.GetKey(KeyCode.LeftShift))
-            playerMoveSpeed = playerMoveSpeedSlow;
-        else
-            playerMoveSpeed = playerMoveSpeedNormal;
+        playerMoveSpeed = Input.GetKey(KeyCode.LeftShift) ? playerMoveSpeedSlow : playerMoveSpeedNormal;
 
         float xInput = Input.GetAxis("Horizontal") * playerMoveSpeed * Time.deltaTime;
         float yInput = Input.GetAxis("Vertical") * playerMoveSpeed * Time.deltaTime;
@@ -100,7 +97,6 @@ public class Player : MonoBehaviour
                 gameObject.SetActive(false);
                 SceneManager.LoadScene("Game Over Menu");
             }
-                
         }
     }
 

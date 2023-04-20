@@ -9,7 +9,6 @@ public class EnemySeeker : Enemy
     private float canSeekTimer = default;
     private bool canSeek = true;
 
-
     protected override void Start()
     {
         base.Start();
