@@ -20,7 +20,7 @@ public class Player : MonoBehaviour
     private Vector2 shieldSize;
     protected ScreenBoundaries screenBoundaries;
 
-    void Start()
+    private void Awake()
     {
         guns = GetComponentsInChildren<Gun>(true);
         shield = GetComponentInChildren<Shield>(true);
@@ -50,7 +50,7 @@ public class Player : MonoBehaviour
 
     private void Shoot()
     {
-        if (Input.GetKey(KeyCode.Space))
+        if (Input.GetKey(KeyCode.Space) || Input.GetMouseButton(0))
         {
             if (!gunBoost)
             {

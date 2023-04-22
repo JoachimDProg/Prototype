@@ -171,8 +171,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   projectileSpeed: 10
   projectileDamage: 0
-  curveX: 0.001
-  curveY: 0.001
+  outOfBoundsBuffer: 1
+  curveX: 0.1
+  curveY: 0.1
   curveModifier: 0.2
 --- !u!212 &7460269048813142603
 SpriteRenderer:

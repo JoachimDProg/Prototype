@@ -11,9 +11,7 @@ public class NormalMove : IMovement
     public Vector3 Move(Vector3 position, Vector3 initialUp, Vector3 currentUp, float movementSpeed)
     {
         float posY = movementSpeed * Time.deltaTime * initialUp.y;
-        Vector3 newPosition = new Vector3(0, posY);
-
-        return newPosition;
+        return new Vector3(0, posY);
     }
 }
 
@@ -23,9 +21,7 @@ public class SeekMove : IMovement
     {
         float posX = movementSpeed * Time.deltaTime * currentUp.x;
         float posY = movementSpeed * Time.deltaTime * currentUp.y;
-        Vector3 newPosition = new Vector3(posX, posY);
-
-        return newPosition;
+        return new Vector3(posX, posY);
     }
 }
 
@@ -39,8 +35,6 @@ public class SineMove : IMovement
         
         float posX = movementSpeed * Time.deltaTime * sin;
         float posY = movementSpeed * Time.deltaTime * initialUp.y;
-        Vector3 newPosition = new Vector3(posX, posY);
-
-        return newPosition;
+        return new Vector3(posX, posY);
     }
 }

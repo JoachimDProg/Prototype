@@ -27,7 +27,6 @@ public abstract class Enemy : MonoBehaviour
     [Header("Object References")]
     protected GameObject player;
 
-    // Start is called before the first frame update
     protected virtual void Start()
     {
         gun = GetComponentInChildren<Gun>();
@@ -45,7 +44,6 @@ public abstract class Enemy : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
     void Update()
     {
         Move();
@@ -73,6 +71,7 @@ public abstract class Enemy : MonoBehaviour
     {
         transform.position += movement.Move(transform.position, initialUp, transform.up, movementSpeed);
     }
+
     protected void UpdateBoundStatus(Vector3 position)
     {
         if (screenBoundaries.IsInsideBounds(position))

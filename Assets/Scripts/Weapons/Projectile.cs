@@ -10,6 +10,7 @@ public abstract class Projectile : MonoBehaviour
     protected Vector2 direction;
 
     [Header("Screen Bound Parameters")]
+    [SerializeField] protected float outOfBoundsBuffer = 0.0f;
     protected Vector2 spriteSize;
     protected ScreenBoundaries bounds;
 
@@ -19,11 +20,6 @@ public abstract class Projectile : MonoBehaviour
     {
         bounds = ScreenBoundaries.Instance;
         spriteSize = GetComponent<SpriteRenderer>().bounds.extents;
-    }
-
-    private void Start()
-    {
-
     }
 
     void Update()
@@ -41,7 +37,7 @@ public abstract class Projectile : MonoBehaviour
 
     private void ReturnToPoolWhenOutOfBounds()
     {
-        if (bounds.DistanceFromBounds(transform.position) > (spriteSize.y + spriteSize.x) / 2)
+        if (bounds.DistanceFromBounds(transform.position) > (spriteSize.y + spriteSize.x) / 2 + outOfBoundsBuffer)
         {
             returnToPool.Invoke(this);
         }

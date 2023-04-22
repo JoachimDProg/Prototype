@@ -3,37 +3,31 @@ using UnityEngine;
 
 public class Boss : MonoBehaviour
 {
-    // objects references
-    [SerializeField] private Player player = null;
-    [SerializeField] private GameObject initialPoint = null;
-    [SerializeField] private GameObject[] points = null;
-    [SerializeField] AnimationCurve animationCurve = null;
+    [Header("Variables")]
+    [SerializeField] private GameObject initialPoint;
+    [SerializeField] private GameObject[] points;
+    private Gun[] guns;
 
-    [Header("Enemy Configuration")]
-    [SerializeField] private float movementRate = 0.0f;
-    [SerializeField] private float movementSpeed = 0.0f;
-    [SerializeField] private float movementTime = 0.0f;
-    [SerializeField] private float shootRange = 0.0f;
+    [Header("Movement Configuration")]
+    [SerializeField] private float movementSpeedInSeconds = 0.0f;
+    [SerializeField] private AnimationCurve movementCurve;
+    [SerializeField] private float waitBetweenMoves;
 
-    [Header("Observation Variable")]
-    [SerializeField] private Gun[] guns;
-    private Vector3 playerPosition;
-    private float movementCooldownTimer;
-
-    // Lerp variables
-    [SerializeField] float time = 0.0f;
-    bool hasEnteredScene = false;
+    [Header("Lerp Variables")]
+    private float time = 0.0f;
+    private bool hasEnteredScene = false;
     private int destinationPointIndex;
     private Vector2 initialPointPosition;
     private Vector2 currentPointPosition;
     private Vector2 destinationPointPosition;
 
-    private void Start()
+    private void Awake()
     {
         guns = GetComponentsInChildren<Gun>();
-        movementCooldownTimer = 0;
+    }
 
-        // Lerp init
+    private void Start()
+    {
         destinationPointIndex = 1;
         initialPointPosition = initialPoint.transform.position;
         currentPointPosition = points[0].transform.position;
@@ -57,17 +51,17 @@ public class Boss : MonoBehaviour
 
     private void Move()
     {
-        if (time < movementTime)
+        if (time < movementSpeedInSeconds)
         {
-            float t = time / movementTime;
+            float t = time / movementSpeedInSeconds;
             t = Mathf.Clamp01(t);
-            t = animationCurve.Evaluate(t);
+            t = movementCurve.Evaluate(t);
 
             transform.position = Vector2.Lerp(currentPointPosition, destinationPointPosition, t);
 
             time += Time.deltaTime;
 
-            if (time > movementTime)
+            if (time > movementSpeedInSeconds)
             {
                 StartCoroutine(WaitBetweenMoves());
             }
@@ -76,7 +70,7 @@ public class Boss : MonoBehaviour
 
     private void EnterScene()
     {
-        float t = time / movementTime;
+        float t = time / movementSpeedInSeconds;
 
         time += Time.deltaTime;
 
@@ -90,7 +84,7 @@ public class Boss : MonoBehaviour
 
     IEnumerator BossWait()
     {
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(waitBetweenMoves);
 
         hasEnteredScene = true;
         time = 0.0f;
@@ -100,7 +94,7 @@ public class Boss : MonoBehaviour
     {
         Shoot();
 
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(waitBetweenMoves);
 
         destinationPointIndex++;
         if (destinationPointIndex >= points.Length)
@@ -120,14 +114,5 @@ public class Boss : MonoBehaviour
         {
             gun.Shoot();
         }
-    }
-
-    public Vector2 CalculateQuadBezier(Vector2 point1, Vector2 point2, Vector2 point3, float t)
-    {
-        float oneMinT = 1 - t;
-        float oneMinTT = oneMinT * oneMinT;
-        float TxT = t * t;
-
-        return oneMinTT * point1 + 2 * oneMinT * t * point2 + TxT * point3;
     }
 }

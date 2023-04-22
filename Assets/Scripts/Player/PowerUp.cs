@@ -11,7 +11,6 @@ public class PowerUp : MonoBehaviour
     [SerializeField] public bool guns = false;
     [SerializeField] public bool shield = false;
     [SerializeField] public bool speed = false;
-   
 
     void Start()
     {

@@ -7,8 +7,8 @@ public class EnemyWaves : MonoBehaviour
     [SerializeField] private float moveSpeed = 0f;
 
     [Header("Wave Configuration")]
-    [SerializeField] private Queue<Enemy> enemyBase = null;
-    [SerializeField] private Enemy enemyPrefab = null;
+    [SerializeField] private Queue<Enemy> enemyBase;
+    [SerializeField] private Enemy enemyPrefab;
     [SerializeField] private int population = 0;
     [SerializeField] private float dequeueTimer = 0f;
     [SerializeField] private float waveSpeed = 0f;
@@ -44,8 +44,7 @@ public class EnemyWaves : MonoBehaviour
 
     private void Move()
     {
-        Vector2 velocity;
-        velocity = transform.up * moveSpeed;
+        Vector2 velocity = transform.up * moveSpeed;
         transform.position += new Vector3(velocity.x, velocity.y) * Time.deltaTime;
     }
 
