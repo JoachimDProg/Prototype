@@ -1,5 +1,4 @@
 using UnityEditor;
-using UnityEngine;
 
 [CustomEditor(typeof(EnemyWaves))]
 [CanEditMultipleObjects]
@@ -23,7 +22,7 @@ public class WaveEditor : Editor
         EditorGUILayout.Space();
         EditorGUILayout.PropertyField(movementType);
 
-        if(movementType.intValue == 0)
+        if (movementType.intValue == 0)
         {
             enemyWaves.isSine = false;
             enemyWaves.moveTypeFlag = 0;
@@ -33,7 +32,7 @@ public class WaveEditor : Editor
             enemyWaves.isSine = false;
             enemyWaves.moveTypeFlag = 1;
         }
-        else if(movementType.intValue == 2)
+        else if (movementType.intValue == 2)
         {
             EditorGUI.indentLevel++;
             enemyWaves.isSine = true;

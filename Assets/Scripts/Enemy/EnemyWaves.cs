@@ -3,18 +3,18 @@ using UnityEngine;
 
 public class EnemyWaves : MonoBehaviour
 {
-    [Header("Wave Movement Parameters")]
+    [Header("Wave Movement Configuration")]
     [SerializeField] private float moveSpeed = 0f;
 
-    [Header("Wave Configuration")]
-    [SerializeField] private Queue<Enemy> enemyBase;
+    [Header("Enemy Wave Configuration")]
+    [SerializeField] private Queue<Enemy> enemyPool;
     [SerializeField] private Enemy enemyPrefab;
     [SerializeField] private int population = 0;
     [SerializeField] private float dequeueTimer = 0f;
     [SerializeField] private float waveSpeed = 0f;
     private bool canEmptyPool = false;
     private float canEmptyDistance = 5f;
-    private float sendTroopsTimer = 0f;
+    private float sendEnemyTimer = 0f;
     
     public enum MovementType { Normal, Seek, Sine };
     [HideInInspector] public MovementType movementType;
@@ -31,7 +31,7 @@ public class EnemyWaves : MonoBehaviour
 
     void Start()
     {
-        sendTroopsTimer = dequeueTimer;
+        sendEnemyTimer = dequeueTimer;
         FillBase();
     }
 
@@ -59,14 +59,14 @@ public class EnemyWaves : MonoBehaviour
 
     private void FillBase()
     {
-        enemyBase = new Queue<Enemy>();
+        enemyPool = new Queue<Enemy>();
 
         for (int i = 0; i < population; i++)
         {
             Enemy enemy = Instantiate(enemyPrefab, transform.position, Quaternion.identity);
             enemy.InitMove(WaveMoveInit(), isSine, sineParam);
             enemy.gameObject.SetActive(false);
-            enemyBase.Enqueue(enemy);
+            enemyPool.Enqueue(enemy);
         }
     }
 
@@ -74,17 +74,17 @@ public class EnemyWaves : MonoBehaviour
     {
         if (canEmpty)
         {
-            sendTroopsTimer -= Time.deltaTime;
+            sendEnemyTimer -= Time.deltaTime;
 
-            if (sendTroopsTimer <= 0)
+            if (sendEnemyTimer <= 0)
             {
-                Enemy enemy = enemyBase.Dequeue();
+                Enemy enemy = enemyPool.Dequeue();
                 enemy.InitParameters(transform.position, transform.up, waveSpeed, ReturnToBase);
                 enemy.gameObject.SetActive(true);
-                sendTroopsTimer = dequeueTimer;
+                sendEnemyTimer = dequeueTimer;
             }
 
-            if (enemyBase.Count == 0)
+            if (enemyPool.Count == 0)
                 gameObject.SetActive(false);
         }
     }
@@ -117,7 +117,7 @@ public class EnemyWaves : MonoBehaviour
 
     private void ReturnToBase(Enemy enemy)
     {
-        enemyBase.Enqueue(enemy);
+        enemyPool.Enqueue(enemy);
         enemy.gameObject.SetActive(false);
     }
 }

@@ -4,36 +4,37 @@ using UnityEngine;
 
 public abstract class Enemy : MonoBehaviour
 {
-    [Header("Enemy Configuration")]
-    [SerializeField] protected float shootPermissionTimer;
+    [Header("Enemy Variables")]
     private Action<Enemy> returnToBase;
     protected IMovement movement;
-    protected Gun gun;
-    protected float movementSpeed = 0f;
-    protected float canShootTimer = 0f;
-    protected bool canShoot = false; // for delaying shoot when entering bounds
+    protected float movementSpeed;
     protected Vector3 initialUp;
 
     [Header("Sine Configuration")]
-    protected Dictionary<string, float> sineParam = default;
+    protected Dictionary<string, float> sineParam;
     protected bool isSine = false;
 
     [Header("Screen Bound Parameters")]
+    protected ScreenBoundaries screenBoundaries;
     protected bool hasEnteredBounds = false;
     protected bool isInsideBounds = false;
-    protected ScreenBoundaries screenBoundaries;
     protected Vector2 spriteSize;
 
     [Header("Object References")]
-    protected GameObject player;
+    protected GameManager gameManager;
+    protected Player player;
+
+    protected void Awake()
+    {
+        screenBoundaries = ScreenBoundaries.Instance;
+        spriteSize = GetComponent<SpriteRenderer>().bounds.size;
+
+        gameManager = GameManager.Instance;
+        player = gameManager.player;
+    }
 
     protected virtual void Start()
     {
-        gun = GetComponentInChildren<Gun>();
-        spriteSize = GetComponent<SpriteRenderer>().bounds.size;
-        screenBoundaries = ScreenBoundaries.Instance;
-        player = GameObject.FindGameObjectWithTag("Player"); // change to playerManager
-        canShootTimer = shootPermissionTimer;
         initialUp = transform.up;
 
         if (isSine)
@@ -44,12 +45,10 @@ public abstract class Enemy : MonoBehaviour
         }
     }
 
-    void Update()
+    protected virtual void Update()
     {
         Move();
         UpdateBoundStatus(transform.position);
-        UpdateShootPermissionTimer();
-        Shoot();
         CanReturnToBase();
     }
 
@@ -67,11 +66,6 @@ public abstract class Enemy : MonoBehaviour
             returnToBase.Invoke(this);
     }
 
-    public virtual void Move()
-    {
-        transform.position += movement.Move(transform.position, initialUp, transform.up, movementSpeed);
-    }
-
     protected void UpdateBoundStatus(Vector3 position)
     {
         if (screenBoundaries.IsInsideBounds(position))
@@ -80,21 +74,10 @@ public abstract class Enemy : MonoBehaviour
         isInsideBounds = screenBoundaries.IsInsideBounds(position);
     }
 
-    protected void UpdateShootPermissionTimer()
+    public virtual void Move()
     {
-        if (!canShoot)
-        {
-            canShootTimer -= Time.deltaTime;
-
-            if (canShootTimer <= 0)
-            {
-                canShootTimer = shootPermissionTimer;
-                canShoot = true;
-            }
-        }
+        transform.position += movement.Move(transform.position, initialUp, transform.up, movementSpeed);
     }
-
-    protected abstract void Shoot();
 
     public void InitParameters(Vector2 position, Vector2 direction, float speed, Action<Enemy> returnToBase)
     {
@@ -106,9 +89,9 @@ public abstract class Enemy : MonoBehaviour
         this.returnToBase = returnToBase;
     }
 
-    public void InitMove(IMovement enemyMovement, bool isSine, Dictionary<string, float> sineParam)
+    public void InitMove(IMovement movement, bool isSine, Dictionary<string, float> sineParam)
     {
-        this.movement = enemyMovement;
+        this.movement = movement;
         this.isSine = isSine;
         this.sineParam = sineParam;
     }
